@@ -63,8 +63,6 @@
   `[p.i.mix (~(got by p.i.mix) 0)]
 --
 
-::=|  tex=tape  :: the text being searched
-::=|  ins=?  :: are we case-insensitive?
 =|  [rig=tape tex=tape ins=?]
 |%
 +$  mast  (map @ud [p=pint q=tape])
@@ -72,18 +70,19 @@
 +$  mist  (list edgt)
 +$  rult  _^|(|:($:edgt $:mist))
 +$  fret  [p=[p=@ud q=(unit @ud)] q=(unit ?(%'?' %'+'))]
-+$  posix-class
-  $?  %ascii
++$  post
+  $?  %digit
       %lower
       %upper
-      %word
+      %space
   ==
 ::+$  belt
 ::  $:  p=(set @t)  :: individual characters
 ::      q=(list [lo=@t hi=@t])
 ::      r=(list posix-class)
 ::  ==
-+$  belt  (list ?(@ta [p=@ta q=@ta]))
++$  clat  ?(@t [p=@t q=@t] [~ ~ r=post])
++$  belt  (list clat)
 ++  cont
   :: Concatenate two regular expressions
   |=  [a=rult b=rult]  ^-  rult
@@ -235,13 +234,22 @@
   |=  [neg=? bil=belt]  ^-  rult
   |=  [vex=edgt]  ^-  mist
   ?~  q.q.vex  ~
-  =*  yit  ~[vex(p.q (lust i.q.q.vex p.q.vex), q.q t.q.q.vex)]
-  |-  ^-  mist
-  ?~  bil  ~
-  ?@  i.bil
-    ?:  !=(=(i.bil i.q.q.vex) neg)  yit
-    $(bil t.bil)
-  ?:  !=((rant i.q.q.vex i.bil) neg)  yit
+  =;  sip=?
+    ?:  =(sip neg)  ~
+    ~[vex(p.q (lust i.q.q.vex p.q.vex), q.q t.q.q.vex)]
+  |-  ^-  ?
+  ?~  bil  |
+  ?:  ?@  i.bil
+        =(i.bil i.q.q.vex)
+      ?@  +.i.bil
+        (rant i.q.q.vex i.bil)
+      ?-  r.i.bil
+        %digit  (rant i.q.q.vex '0' '9')
+        %upper  (~(has by cass-map:ul:l10n) i.q.q.vex)
+        %lower  (~(has by cuss-map:ul:l10n) i.q.q.vex)
+        %space  |(=(' ' i.q.q.vex) =('\09' i.q.q.vex))
+      ==
+    &
   $(bil t.bil)
 ++  bart
   :: Backreference
@@ -307,7 +315,9 @@
     (stut a u.b)
   ;~(plug elm (punt rep))
 ++  elm
-  ;~(pose lit any cla kan ban bak cap luk)
+  ;~(pose lit any kan ban pec bak cap nok luk cla)
+++  nok  :: no capture
+  (ifix [(jest '(?:') par] top)
 ++  cap
   %+  knee  *rult
   |.  ~+
@@ -340,7 +350,7 @@
           ?~  q  [p q]
           ?>  (lte p u.q)  [p q]
         ;~  pose
-          ;~(plug dem (easy ~) ;~(pfix com dem))
+          ;~(plug dem ;~(pfix com (punt dem)))
           (cook |=([n=@ud] [n `n]) dem)
           (cook |=([n=@ud] [0 `n]) ;~(pfix com dem))
           ::   todo: is /a{,}/ a legitimate regular expression?
@@ -354,15 +364,14 @@
 ::
 ++  met  (mask "^$().[\{*?+|\\")
 ++  nel  (jest '\0a')
-++  cha  ;~(less met next)
+++  cha  ;~(pose ;~(less met next) esc)
 ++  nil  (cold `rult`|=([vex=edgt] ~[vex]) (easy ~))
 ::
 ::  Middle-sized parsers
 ::
 ++  lit  :: literal character
-  %-  cook
-  :_  cha
-  |=  [c=@t]
+  %-  cook  :_  cha
+  |=  [c=@t]  ^-  rult
   |=  [vex=edgt]  ^-  mist
   ?~  q.q.vex  ~
   ?.  =(c i.q.q.vex)  ~
@@ -388,18 +397,29 @@
   ?~  q.q.vex  ~[vex]
   ?:  =('\0a' i.q.q.vex)  ~[vex]
   ~
-++  cla  :: character class (incomplete)
+++  bel  ;~(pose ;~(plug next ;~(pfix hep cil)) pos next)
+++  cil  ;~(less hep ser ;~(pose cha ;~(pfix bas ser) ;~(less bas next)))
+++  cel  ;~(pose ;~(plug cil ;~(pfix hep cil)) cil pos)
+++  pos
+  ;~  pose
+    %+  ifix  [(jest '[:') (jest ':]')]
+    (stag ~ (stag ~ (perk ~[%digit %lower %upper %space])))
+  ::
+    (cold ``%digit (jest '\\d'))
+  ::
+    (cold ``%space (jest '\\s'))
+  ==
+  :: todo: how to handle ranges "a-b" where b is less than a?
+++  cla  :: character class
   %+  ifix  [sel ser]
   %+  cook  flit
-  ;~(plug (fuss '^' '') (star cel))
-++  cel  :: character class element
-  ;~  pose
-    ;~(plug cha ;~(pfix hep ;~(less ser cha)))
-  ::
-    cha
-  ::
-    ::%+  ifix  [;~(plug sel col) ;~(plug col sel)]
-    ::(perk ~[%ascii %lower %upper %word])
+  ;~  plug  (fuss '^' '')
+    %-  cook
+    :_  ;~(plug bel (star cel) (fuss '-' ''))
+    |=  [a=clat b=(list clat) c=?]  ^-  belt
+    ?:  c
+      ['-' a b]
+    [a b]
   ==
 ++  bak  :: backreference
   (cook bart ;~(pfix bas ;~(less (jest '0') dit)))
@@ -417,8 +437,44 @@
 ++  esc  :: escape code
   ;~  pfix  bas
     ;~  pose
-      (cold (gist "\0a") (jest 'n'))
-      (cook (cork trip gist) met)
+      met
+    ::
+      %-  sear  :_  next
+      %~  get  by
+      %-  malt
+      :~  ['a' '\07']
+          ['b' '\08']
+          ['t' '\09']
+          ['n' '\0a']
+          ['v' '\0b']
+          ['f' '\0c']
+          ['r' '\0d']
+          ['e' '\1b']
+       ==
+    ::
+      %+  cook  |=([a=@ b=@] (add (mul 16 a) b))
+      ;~(pfix (jest 'x') ;~(plug hit hit))
+    ==
+  ==
+::
+++  pec  :: some perl-compatible backslash sequences
+  ;~  pfix  bas
+    %-  sear  :_  next
+    %~  get  by
+    ^-  (map @t rult)  %-  malt
+    :~  ['d' (flit | `belt`~[``%digit])]
+        ['D' (flit & `belt`~[``%digit])]
+        ['s' (flit | `belt`~[``%space])]
+        ['S' (flit & `belt`~[``%space])]
+    ==
+  ==
+++  cep
+  ;~  pfix  bas
+    %-  sear  :_  next
+    %~  get  by
+    ^-  (map @t clat)  %-  malt
+    :~  ['d' '0' '9']
+        ['D' '0' '9']
     ==
   ==
 ::
