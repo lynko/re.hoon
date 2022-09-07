@@ -4,7 +4,7 @@
 ~["The quick brown FOX" "What do you know about THE QUICK BROWN FOX?"]
 ::
 :^  %has-match  "abcd\\t\\n\\r\\f\\a\\e\\x39\\x3b\\$\\\\\\?caxyz"
-~["abcd\09\0a\0d\0c\07\1b9;\\$\\?caxyz"]
+~["abcd\09\0a\0d\0c\07\1b9;$\\?caxyz"]
 ~
 ::
 :^  %has-match  "a*abc?xyz+pqr\{3}ab\{2,}xy\{4,5}pq\{0,6}AB\{0,}zz"
@@ -15,29 +15,29 @@
 ~["abczz" "abcabczz"]
 ~["zz" "abcabcabczz" ">>abczz"]
 ::
-:::^  %has-match  "^(b+?|a)\{1,2}?c"  todo
-::~["bc" "bbc" "bbbc" "bac" "bbac" "aac" "abbbbbbbbbbbc" "bbbbbbbbbbbac"]
-::~["aaac" "abbbbbbbbbbbac"]
+:^  %has-match  "^(b+?|a)\{1,2}?c"
+~["bc" "bbc" "bbbc" "bac" "bbac" "aac" "abbbbbbbbbbbc" "bbbbbbbbbbbac"]
+~["aaac" "abbbbbbbbbbbac"]
 ::
 :^  %has-match  "^(b+|a)\{1,2}c"
 ~["bc" "bbc" "bbbc" "bac" "bbac" "aac" "abbbbbbbbbbbc" "bbbbbbbbbbbac"]
 ~["aaac" "abbbbbbbbbbbac"]
 ::
-:::^  %has-match  "^(b+|a)\{1,2}?bc"  todo
-::~["bbc"]
-::~
-::::
-:::^  %has-match  "^(b*|ba)\{1,2}?bc"
-::~["babc" "bbabc" "bababc"]
-::~["bababbc" "babababc"]
-::::
-:::^  %has-match  "^(ba|b*)\{1,2}?bc"
-::~["babc" "bbabc" "bababc"]
-::~["bababbc" "babababc"]
-::::
-:::^  %has-match  "^\\ca\\ca\\c[;\\c:"
-::~["\01\01\1b;z"]
-::~
+:^  %has-match  "^(b+|a)\{1,2}?bc"
+~["bbc"]
+~
+::
+:^  %has-match  "^(b*|ba)\{1,2}?bc"
+~["babc" "bbabc" "bababc"]
+~["bababbc" "babababc"]
+::
+:^  %has-match  "^(ba|b*)\{1,2}?bc"
+~["babc" "bbabc" "bababc"]
+~["bababbc" "babababc"]
+::
+:^  %has-match  "^\\ca\\ca\\c[;\\c:"
+~["\01\01\1b;z"]
+~
 ::
 :^  %has-match  "^[ab\\]cde]"
 ~["athing" "bthing" "]thing" "cthing" "dthing" "ething"]
@@ -67,13 +67,13 @@
 ~["xxx0" "xxx1234"]
 ~["xxx"]
 ::
-:::^  %has-match  "^.+[0-9][0-9][0-9]$"  todo
-::~["x123" "xx123" "123456"]
-::~["123" "x1234"]
-::::
-:::^  %has-match  "^.+?[0-9][0-9][0-9]$"
-::~["x123" "xx123" "123456"]
-::~["123" "x1234"]
+:^  %has-match  "^.+[0-9][0-9][0-9]$"
+~["x123" "xx123" "123456"]
+~["123" "x1234"]
+::
+:^  %has-match  "^.+?[0-9][0-9][0-9]$"
+~["x123" "xx123" "123456"]
+~["123" "x1234"]
 ::
 :^  %has-match  "^([^!]+)!(.+)=apquxz\\.ixr\\.zzz\\.ac\\.uk$"
 ~["abc!pqr=apquxz.ixr.zzz.ac.uk"]
@@ -83,9 +83,9 @@
 ~["Well, we need a colon: somewhere"]
 ~["*** Fail if we don't"]
 ::
-:^  %has-match  "([\\da-f:]+)$/"
-~["0abc" "abc" "fed" "E" "::" "5f03:12C0::932e" "fed def" "Any old stuff"]
-~["0zzz" "gzzz" "fed\10" "Any old rubbish"]
+:^  %has-match  "([\\da-f:]+)$"
+~["0abc" "abc" "fed" "::" "5f03:12C0::932e" "fed def" "Any old stuff"]
+~["0zzz" "gzzz" "fed\10" "E" "Any old rubbish"]
 ::
 :^  %has-match  "^.*\\.(\\d\{1,3})\\.(\\d\{1,3})\\.(\\d\{1,3})$"
 ~[".1.2.3" "A.12.123.0"]
@@ -127,8 +127,8 @@
 ~["abcdefhijklm"]
 ~
 ::
-:^  %has-match  "^[\\w][\\W][\\s][\\S][\\d][\\D][\\b][\\n][\\c]][\\12]"
-~["a+ Z0+\008\0a\01d\0a"]
+:^  %has-match  "^[\\w][\\W][\\s][\\S][\\d][\\D][\\b][\\n][\\]]"
+~["a+ Z0+\08\0a]"]
 ~
 ::
 :^  %has-match  "^[.^$|()*+?\{,}]+"
@@ -139,17 +139,17 @@
 ~["z" "az" "aaaz" "a" "aa" "aaaa" "a+" "aa+"]
 ~
 ::
-:::^  %has-match  "^a*?\\w"  todo
-::~["z" "az" "aaaz" "a" "aa" "aaaa" "a+" "aa+"]
-::~
+:^  %has-match  "^a*?\\w"
+~["z" "az" "aaaz" "a" "aa" "aaaa" "a+" "aa+"]
+~
 ::
 :^  %has-match  "^a+\\w"
 ~["az" "aaaz" "aa" "aaaa" "aa+"]
 ~
 ::
-:::^  %has-match  "^a+?\\w"  todo
-::~["az" "aaaz" "aa" "aaaa" "aa+"]
-::~
+:^  %has-match  "^a+?\\w"
+~["az" "aaaz" "aa" "aaaa" "aa+"]
+~
 ::
 :^  %has-match  "^\\d\{8}\\w\{2,}"
 ~["1234567890" "12345678ab" "12345678__"]
@@ -159,22 +159,22 @@
 ~["uoie" "1234" "12345" "aaaaa"]
 ~["123456"]
 ::
-:::^  %has-match  "^[aeiou\\d]\{4,5}?"  todo
-::~["uoie" "1234" "12345" "aaaaa" "123456"]
-::~
+:^  %has-match  "^[aeiou\\d]\{4,5}?"
+~["uoie" "1234" "12345" "aaaaa" "123456"]
+~
 ::
-:^  %has-match  "\\A(abc|def)=(\\01)\{2,3}\\Z"
+:^  %has-match  "\\A(abc|def)=(\\1)\{2,3}\\Z"
 ~["abc=abcabc" "def=defdefdef"]
 ~["abc=defdef"]
 ::
-:^  %has-match  "^(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)\\09*(\\03\\04)\\01(?#)2$"
-~["abcdefghijkcda2" "abcdefghijkkkkcda2"]
+:^  %has-match  "^(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)\\9*(\\3\\4)\\12$"
+~["abcdefghijkcda2" "abcdefghijkiiicda2"]
 ~
 ::
-:^  %has-match  "(cat(a(ract|tonic)|erpillar)) \\01()2(3)"
+:^  %has-match  "(cat(a(ract|tonic)|erpillar)) \\1()2(3)"
 ~["cataract cataract23" "catatonic catatonic23" "caterpillar caterpillar23"]
 ~
-:^  %has-match  "(cat(a(ract|tonic)|erpillar)) \\01()2(3)"
+:^  %has-match  "(cat(a(ract|tonic)|erpillar)) \\1()2(3)"
 ~["cataract cataract23" "catatonic catatonic23" "caterpillar caterpillar23"]
 ~
 ::
@@ -187,8 +187,8 @@
 ~["From abcd  Sep 01 12:33:02 1997"]
 ::
 :^  %has-match  "^12.34"
+~["12 34"]
 ~["12\0a34" "12\0d34"]
-~
 ::
 :^  %has-match  "\\w+(?=\\t)"
 ~["the quick brown\09 fox"]
@@ -206,23 +206,7 @@
 ~["abc456"]
 ~["abc123"]
 ::
-:^  %has-match  "^1234(?# test newlines"
-~
-~
-::
-:^  %has-match  "^1234 #comment in extended re"
-~
-~
-::
-:^  %has-match  "#rhubarb"
-~
-~
-::
-:^  %has-match  "^abcd#rhubarb/"
-~["abcd"]
-~
-::
-:^  %has-match  "^(a)\\01\{2,3}(.)"
+:^  %has-match  "^(a)\\1\{2,3}(.)"
 ~["aaab" "aaaab" "aaaaab" "aaaaaab"]
 ~
 ::
@@ -238,67 +222,59 @@
 ~["aabbbbb"]
 ~
 ::
-:::^  %has-match  "^[ab]\{1,3}?(ab*|b)"  todo
-::~["aabbbbb"]
-::~
-::::
-:::^  %has-match  "^[ab]\{1,3}?(ab*?|b)"
-::~["aabbbbb"]
-::~
-::::
-:::^  %has-match  "^[ab]\{1,3}(ab*?|b)"
-::~["aabbbbb"]
-::~
-::
-:^  %has-match  "abc\\00def\\00pqr\\00xyz\\000AB"
-~["abc\00def\00pqr\00xyz\000AB" "abc456 abc\00def\00pqr\00xyz\000ABCDE"]
+:^  %has-match  "^[ab]\{1,3}?(ab*|b)"
+~["aabbbbb"]
 ~
 ::
-:^  %has-match  "abc\\00def\\00pqr\\00xyz\\000AB"
-~["abc\00def\00pqr\00xyz\000AB" "abc456 abc\00def\00pqr\00xyz\000ABCDE"]
+:^  %has-match  "^[ab]\{1,3}?(ab*?|b)"
+~["aabbbbb"]
 ~
 ::
-:^  %has-match  "^[\\00-\\1f]"
+:^  %has-match  "^[ab]\{1,3}(ab*?|b)"
+~["aabbbbb"]
+~
+::
+:^  %has-match  "abc\\x00def\\x00pqr\\x00xyz\\x00AB"
+~["abc\00def\00pqr\00xyz\00AB" "abc456 abc\00def\00pqr\00xyz\00ABCDE"]
+~
+::
+:^  %has-match  "^[\\x00-\\x1f]"
 ~["\00A" "\01B" "\1fC"]
 ~
 ::
-:^  %has-match  "\\00*"
+:^  %has-match  "\\x00*"
 ~["\00\00\00\00"]
 ~
 ::
-:^  %has-match  "A\\00\{2,3}Z"
+:^  %has-match  "A\\x00\{2,3}Z"
 ~["The A\00\00Z" "An A\00\00\00Z"]
 ~["A\00Z" "A\00\00\00\00Z"]
 ::
-:^  %has-match  "^(cow|)\\01(bell)"
+:^  %has-match  "^(cow|)\\1(bell)"
 ~["cowcowbell" "bell"]
 ~["cowbell"]
 ::
 :^  %has-match  "^\\s"
-~["\20abc" "\00cabc" "\0aabc" "\0dabc" "\09abc"]
+~["\20abc" "\0cabc" "\0aabc" "\0dabc" "\09abc"]
 ~["abc"]
 ::
-:^  %has-match  "^a\09b"
-~
-~
-::
-:^  %has-match  "^(a|)\\01*b"
+:^  %has-match  "^(a|)\\1*b"
 ~["ab" "aaaab" "b"]
 ~["acb"]
 ::
-:^  %has-match  "^(a|)\\01+b"
+:^  %has-match  "^(a|)\\1+b"
 ~["aab" "aaaab" "b"]
 ~["ab"]
 ::
-:^  %has-match  "^(a|)\\01?b"
+:^  %has-match  "^(a|)\\1?b"
 ~["ab" "aab" "b"]
 ~["acb"]
 ::
-:^  %has-match  "^(a|)\\01\{2}b"
+:^  %has-match  "^(a|)\\1\{2}b"
 ~["aaab" "b"]
 ~["ab" "aab" "aaaab"]
 ::
-:^  %has-match  "^(a|)\\01\{2,3}b"
+:^  %has-match  "^(a|)\\1\{2,3}b"
 ~["aaab" "aaaab" "b"]
 ~["ab" "aab" "aaaaab"]
 ::
@@ -310,40 +286,19 @@
 ~["track1.title:TBlah blah blah"]
 ~
 ::
-:^  %has-match  "([^.]*)\\.([^:]*):[T ]+(.*)/"
-~["track1.title:TBlah blah blah"]
-~
-::
-:^  %has-match  "([^.]*)\\.([^:]*):[t ]+(.*)/"
-~["track1.title:TBlah blah blah"]
-~
-::
 :^  %has-match  "^[W-c]+$"
 ~["WXY_^abc"]
-~["wxy"]
+~["wxy_^ABC"]
 ::
-:^  %has-match  "^[W-c]+$/"
-~["WXY_^abc" "wxy_^ABC"]
+:^  %has-match  "^[\\x3f-\\x5F]+$"
 ~
-::
-:^  %has-match  "^[\\03f-\\05F]+$/"
 ~["WXY_^abc" "wxy_^ABC"]
-~
 ::
-:^  %has-match  "^abc$/"
+:^  %has-match  "^abc$"
 ~["abc" "qqq\0aabc" "abc\0azzz" "qqq\0aabc\0azzz"]
 ~
 ::
-:^  %has-match  "^abc$"
-~["abc"]
-~["qqq\0aabc" "abc\0azzz" "qqq\0aabc\0azzz"]
-::
-::
-:^  %has-match  "\\A(.)*\\Z/"
-~["abc\0adef"]
-~
-::
-:^  %has-match  "\\A(.)*\\Z/"
+:^  %has-match  "\\A(.)*\\Z"
 ~
 ~["abc\0adef"]
 ::
@@ -375,17 +330,17 @@
 ~["12-34z"]
 ~["aaa"]
 ::
-:^  %has-match  "\\05c"
+:^  %has-match  "\\x5c"
 ~["\\"]
 ~
 ::
-:^  %has-match  "\\10Z"
+:^  %has-match  "\\x10Z"
 ~["the Zoo"]
 ~["Zulu"]
 ::
-:^  %has-match  "(abc)\\01/"
-~["abcabc" "ABCabc" "abcABC"]
-~
+:^  %has-match  "(abc)\\1"
+~["abcabc"]
+~["ABCabc" "abcABC"]
 ::
 :^  %has-match  "ab\\\{3cd"
 ~["ab\{3cd"]
@@ -407,11 +362,7 @@
 ~["abc" "abc\0a"]
 ~["abc\0adef"]
 ::
-:::^  %has-match  "(abc)\\53"
-::~["abc\2b"]
-::~
-::
-:::^  %has-match  "(abc)\\d3"
+:::^  %has-match  "(abc)\\xd3"  :: todo
 ::~["abc\d3"]
 ::~
 ::
@@ -419,15 +370,12 @@
 ~["ABCDEFGHIHI"]
 ~
 ::
-:::^  %has-match  "^[A\\8b\\9c]+$"
-::~["A8B9C"]
-::~["A8B9C\00"]
+:^  %has-match  "^[A\\8b\\9c]+$"
+~["A8B9C"]
+~["A8B9C\00"]
 ::
-:^  %has-match  "(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)\\0a\\53"
-~["abcdefghijkllS"]
-~
 ::
-:^  %has-match  "(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)\\0a\\53"
+:^  %has-match  "(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)\0a\53"
 ~["abcdefghijk\0aS"]
 ~
 ::
@@ -439,9 +387,9 @@
 ~["bc"]
 ~
 ::
-:::^  %has-match  "(a|(bc))\{0,0}?xyz"  todo
-::~["xyz"]
-::~
+:^  %has-match  "(a|(bc))\{0,0}?xyz"
+~["xyz"]
+~
 ::
 :^  %has-match  "abc[\\08]de"
 ~["abc\08de"]
@@ -461,19 +409,15 @@
 ::
 :^  %has-match  "^([^a])([^\\b])([^c]*)([^d]\{3,4})"
 ~["baNOTccccd" "baNOTcccd" "baNOTccd" "bacccd"]
-~["anything" "b\08c   " "baccd"]
+~["anything" "b\08c" "baccd"]
 ::
-::
-:^  %has-match  "[^a]/"
-~["Abc "]
+:^  %has-match  "[^a]"
 ~
+~["Abc"]
 ::
-::
-:^  %has-match  "[^a]+/"
-~["AAAaAbc "]
+:^  %has-match  "[^a]+"
+~["AAAaAbc"]
 ~
-::
-::
 ::
 :^  %has-match  "[^k]\{2,3}$"
 ~["abc" "kbc" "kabc"]
@@ -481,9 +425,9 @@
 ::
 :^  %has-match  "^\\d\{8,}\\@.+[^k]$"
 ~["12345678@a.b.c.d" "123456789@x.y.z"]
-~["12345678@x.y.uk" "1234567@a.b.c.d       "]
+~["12345678@x.y.uk" "1234567@a.b.c.d"]
 ::
-:^  %has-match  "(a)\\01\{8,}"
+:^  %has-match  "(a)\\1\{8,}"
 ~["aaaaaaaaa" "aaaaaaaaaa"]
 ~["aaaaaaa"]
 ::
@@ -491,597 +435,568 @@
 ~["aaaabcd" "aaAabcd "]
 ~
 ::
-:^  %has-match  "\\00\\01\\02\\03\\04\\05\\06\\07\\08\\09\\0a\\0b\\0c\\0d\\0e\\0f\\10\\11\\12\\13\\14\\15\\16\\17\\18\\19\\1a\\1b\\1c\\1d\\1e\\1f\\20\\21\\22\\23\\24\\25\\26\\27\\28\\29\\2a\\2b\\2c\\2d\\2e\\2f\\30\\31\\32\\33\\34\\35\\36\\37\\38\\39\\3a\\3b\\3c\\3d\\3e\\3f\\40\\41\\42\\43\\44\\45\\46\\47\\48\\49\\4a\\4b\\4c\\4d\\4e\\4f\\50\\51\\52\\53\\54\\55\\56\\57\\58\\59\\5a\\5b\\5c\\5d\\5e\\5f\\60\\61\\62\\63\\64\\65\\66\\67\\68\\69\\6a\\6b\\6c\\6d\\6e\\6f\\70\\71\\72\\73\\74\\75\\76\\77\\78\\79\\7a\\7b\\7c\\7d\\7e\\7f\\80\\81\\82\\83\\84\\85\\86\\87\\88\\89\\8a\\8b\\8c\\8d\\8e\\8f\\90\\91\\92\\93\\94\\95\\96\\97\\98\\99\\9a\\9b\\9c\\9d\\9e\\9f\\a0\\a1\\a2\\a3\\a4\\a5\\a6\\a7\\a8\\a9\\aa\\ab\\ac\\ad\\ae\\af\\b0\\b1\\b2\\b3\\b4\\b5\\b6\\b7\\b8\\b9\\ba\\bb\\bc\\bd\\be\\bf\\c0\\c1\\c2\\c3\\c4\\c5\\c6\\c7\\c8\\c9\\ca\\cb\\cc\\cd\\ce\\cf\\d0\\d1\\d2\\d3\\d4\\d5\\d6\\d7\\d8\\d9\\da\\db\\dc\\dd\\de\\df\\e0\\e1\\e2\\e3\\e4\\e5\\e6\\e7\\e8\\e9\\ea\\eb\\ec\\ed\\ee\\ef\\f0\\f1\\f2\\f3\\f4\\f5\\f6\\f7\\f8\\f9\\fa\\fb\\fc\\fd\\fe\\ff"
-~["\00\01\02\03\04\05\06\07\08\09\0a\0b\0c\0d\0e\0f\10\11\12\13\14\15\16\17\18\19\1a\1b\1c\1d\1e\1f\20\21\22\23\24\25\26\27\28\29\2a\2b\2c\2d\2e\2f\30\31\32\33\34\35\36\37\38\39\3a\3b\3c\3d\3e\3f\40\41\42\43\44\45\46\47\48\49\4a\4b\4c\4d\4e\4f\50\51\52\53\54\55\56\57\58\59\5a\5b\5c\5d\5e\5f\60\61\62\63\64\65\66\67\68\69\6a\6b\6c\6d\6e\6f\70\71\72\73\74\75\76\77\78\79\7a\7b\7c\7d\7e\7f\80\81\82\83\84\85\86\87\88\89\8a\8b\8c\8d\8e\8f\90\91\92\93\94\95\96\97\98\99\9a\9b\9c\9d\9e\9f\070\071\072\073\074\075\076\077\078\079\07a\07b\07c\07d\07e\07f\b0\b1\b2\b3\b4\b5\b6\b7\b8\b9\ba\bb\bc\bd\be\bf\c0\c1\c2\c3\c4\c5\c6\c7\c8\c9\ca\cb\cc\cd\ce\cf\d0\d1\d2\d3\d4\d5\d6\d7\d8\d9\da\db\dc\dd\de\df\1b0\1b1\1b2\1b3\1b4\1b5\1b6\1b7\1b8\1b9\1ba\1bb\1bc\1bd\1be\1bf\0c0\0c1\0c2\0c3\0c4\0c5\0c6\0c7\0c8\0c9\0ca\0cb\0cc\0cd\0ce\0cf"]
+:::^  %has-match  "\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\x09\\x0a\\x0b\\x0c\\x0d\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f\\x20\\x21\\x22\\x23\\x24\\x25\\x26\\x27\\x28\\x29\\x2a\\x2b\\x2c\\x2d\\x2e\\x2f\\x30\\x31\\x32\\x33\\x34\\x35\\x36\\x37\\x38\\x39\\x3a\\x3b\\x3c\\x3d\\x3e\\x3f\\x40\\x41\\x42\\x43\\x44\\x45\\x46\\x47\\x48\\x49\\x4a\\x4b\\x4c\\x4d\\x4e\\x4f\\x50\\x51\\x52\\x53\\x54\\x55\\x56\\x57\\x58\\x59\\x5a\\x5b\\x5c\\x5d\\x5e\\x5f\\x60\\x61\\x62\\x63\\x64\\x65\\x66\\x67\\x68\\x69\\x6a\\x6b\\x6c\\x6d\\x6e\\x6f\\x70\\x71\\x72\\x73\\x74\\x75\\x76\\x77\\x78\\x79\\x7a\\x7b\\x7c\\x7d\\x7e\\x7f\\x80\\x81\\x82\\x83\\x84\\x85\\x86\\x87\\x88\\x89\\x8a\\x8b\\x8c\\x8d\\x8e\\x8f\\x90\\x91\\x92\\x93\\x94\\x95\\x96\\x97\\x98\\x99\\x9a\\x9b\\x9c\\x9d\\x9e\\x9f\\xa0\\xa1\\xa2\\xa3\\xa4\\xa5\\xa6\\xa7\\xa8\\xa9\\xaa\\xab\\xac\\xad\\xae\\xaf\\xb0\\xb1\\xb2\\xb3\\xb4\\xb5\\xb6\\xb7\\xb8\\xb9\\xba\\xbb\\xbc\\xbd\\xbe\\xbf\\xc0\\xc1\\xc2\\xc3\\xc4\\xc5\\xc6\\xc7\\xc8\\xc9\\xca\\xcb\\xcc\\xcd\\xce\\xcf\\xd0\\xd1\\xd2\\xd3\\xd4\\xd5\\xd6\\xd7\\xd8\\xd9\\xda\\xdb\\xdc\\xdd\\xde\\xdf\\xe0\\xe1\\xe2\\xe3\\xe4\\xe5\\xe6\\xe7\\xe8\\xe9\\xea\\xeb\\xec\\xed\\xee\\xef\\xf0\\xf1\\xf2\\xf3\\xf4\\xf5\\xf6\\xf7\\xf8\\xf9\\xfa\\xfb\\xfc\\xfd\\xfe\\xff"
+::~["\00\01\02\03\04\05\06\07\08\09\0a\0b\0c\0d\0e\0f\10\11\12\13\14\15\16\17\18\19\1a\1b\1c\1d\1e\1f\20\21\22\23\24\25\26\27\28\29\2a\2b\2c\2d\2e\2f\30\31\32\33\34\35\36\37\38\39\3a\3b\3c\3d\3e\3f\40\41\42\43\44\45\46\47\48\49\4a\4b\4c\4d\4e\4f\50\51\52\53\54\55\56\57\58\59\5a\5b\5c\5d\5e\5f\60\61\62\63\64\65\66\67\68\69\6a\6b\6c\6d\6e\6f\70\71\72\73\74\75\76\77\78\79\7a\7b\7c\7d\7e\7f\80\81\82\83\84\85\86\87\88\89\8a\8b\8c\8d\8e\8f\90\91\92\93\94\95\96\97\98\99\9a\9b\9c\9d\9e\9f\070\071\072\073\074\075\076\077\078\079\07a\07b\07c\07d\07e\07f\b0\b1\b2\b3\b4\b5\b6\b7\b8\b9\ba\bb\bc\bd\be\bf\c0\c1\c2\c3\c4\c5\c6\c7\c8\c9\ca\cb\cc\cd\ce\cf\d0\d1\d2\d3\d4\d5\d6\d7\d8\d9\da\db\dc\dd\de\df\e0\e1\e2\e3\e4\e5\e6\e7\e8\e9\ea\eb\ec\ed\ee\ef\f0\f1\f2\f3\f4\f5\f6\f7\f8\f9\fa\fb\fc\fd\fe\ff"]
+::~
+:^  %has-match  "P[^*]TAIRE[^*]\{1,6}?LL"
+~["xxxxxxxxxxxPSTAIREISLLxxxxxxxxx"]
 ~
 ::
-:::^  %has-match  "P[^*]TAIRE[^*]\{1,6}?LL"
-::~["xxxxxxxxxxxPSTAIREISLLxxxxxxxxx"]
-::~
-::::
-:::^  %has-match  "P[^*]TAIRE[^*]\{1,}?LL"
-::~["xxxxxxxxxxxPSTAIREISLLxxxxxxxxx"]
-::~
-::::
-:::^  %has-match  "foo(.*?)bar/  "
-::~
-::~
-::::
-:::^  %has-match  "(.*?)(\\d*)"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-:::^  %has-match  "(.*?)(\\d+)"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-:::^  %has-match  "(.*)(\\d+)$"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-:::^  %has-match  "(.*?)(\\d+)$"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-:::^  %has-match  "(.*)\\b(\\d+)$"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-:::^  %has-match  "(.*\\D)(\\d+)$"
-::~["I have 2 numbers: 53147"]
-::~
-::::
-::::
-::::
-::::
-::::
-:::^  %has-match  "\\d\\d\\/\\d\\d\\/\\d\\d\\d\\d"
-::~["01/01/2000"]
-::~
-::::
-:::^  %has-match  "word (?:[a-zA-Z0-9]+ )\{0,10}otherword"
-::~["word cat dog elephant mussel cow horse canary baboon snake shark otherword" "word cat dog elephant mussel cow horse canary baboon snake shark"]
-::~
-::::
-:::^  %has-match  "word (?:[a-zA-Z0-9]+ )\{0,300}otherword"
-::~["word cat dog elephant mussel cow horse canary baboon snake shark the quick brown fox and the lazy dog and several other words getting close to thirty by now I hope"]
-::~
-::::
-:::^  %has-match  "^(a)\{0,0}"
-::~["bcd" "abc" "aab     "]
-::~
-::::
-:::^  %has-match  "^(a)\{0,1}"
-::~["bcd" "abc" "aab  "]
-::~
-::::
-:::^  %has-match  "^(a)\{0,2}"
-::~["bcd" "abc" "aab  "]
-::~
-::::
-:::^  %has-match  "^(a)\{0,3}"
-::~["bcd" "abc" "aab" "aaa   "]
-::~
-::::
-:::^  %has-match  "^(a)\{0,}"
-::~["bcd" "abc" "aab" "aaa" "aaaaaaaa    "]
-::~
-::::
-:::^  %has-match  "^(a)\{1,1}"
-::~["bcd" "abc" "aab  "]
-::~
-::::
-:::^  %has-match  "^(a)\{1,2}"
-::~["bcd" "abc" "aab  "]
-::~
-::::
-:::^  %has-match  "^(a)\{1,3}"
-::~["bcd" "abc" "aab" "aaa   "]
-::~
-::::
-:::^  %has-match  "^(a)\{1,}"
-::~["bcd" "abc" "aab" "aaa" "aaaaaaaa    "]
-::~
-::::
-:::^  %has-match  ".*\\.gif"
-::~["borfle\0abib.gif\0ano"]
-::~
-::::
-:::^  %has-match  ".\{0,}\\.gif"
-::~["borfle\0abib.gif\0ano"]
-::~
-::::
-:::^  %has-match  ".*\\.gif"
-::~["borfle\0abib.gif\0ano"]
-::~
-::::
-:::^  %has-match  ".*\\.gif"
-::~["borfle\0abib.gif\0ano"]
-::~
-::::
-::::
-:::^  %has-match  ".*$"
-::~["borfle\0abib.gif\0ano"]
-::~
-::::
-:::^  %has-match  "(.*X|^B)"
-::~["abcde\0a1234Xyz" "BarFoo" "abcde\0aBar"]
-::~
-::::
-:::^  %has-match  "^\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d"
-::~["123456654321"]
-::~
-::::
-:::^  %has-match  "^(a|b|c)\{12}"
-::~["abcabcabcabc "]
-::~
-::::
-:::^  %has-match  "^[abcdefghijklmnopqrstuvwxy0123456789]"
-::~["n"]
-::~["z"]
-::::
-:::^  %has-match  "abcde\{0,0}"
-::~["abcd"]
-::~["abce"]
-::::
-::::
-:::^  %has-match  "ab(c)\{0,0}d"
-::~["abd"]
-::~["abcd"]
-::::
-::::
-::::
-:::^  %has-match  "\"([^\\\\\"]+|\\\\.)*\""
-::~["the \"quick\" brown fox" "\"the \\\"quick\\\" brown fox\" "]
-::~
-::::
-:::^  %has-match  ""
-::~["abc"]
-::~
-::::
-:::::^  %has-match  "<tr([\\w\\W\\s\\d][^<>]\{0,})><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\d]\{0,}\\.)(.*)((<BR>([\\w\\W\\s\\d][^<>]\{0,})|[\\s]\{0,}))<\\/a><\\/TD><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\w\\W\\s\\d][^<>]\{0,})<\\/TD><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\w\\W\\s\\d][^<>]\{0,})<\\/TD><\\/TR>"
-::::~["<TR BGCOLOR='#DBE9E9'><TD align=left valign=top>43.<a href='joblist.cfm?JobID=94 6735&Keyword='>Word Processor<BR>(N-1286)</a></TD><TD align=left valign=top>Lega lstaff.com</TD><TD align=left valign=top>CA - Statewide</TD></TR>"]
-::::~
-::::::
-:::::^  %has-match  "a.b"
-::::~["acb" "a\0ab"]
-::::~
-::::::
-:::::^  %has-match  "^(b+?|a)\{1,2}?c"
-::::~["bac" "bbac" "bbbac" "bbbbac" "bbbbbac "]
-::::~
-::::::
-:::::^  %has-match  "\\00\{ab}"
-::::~["\00\{ab} "]
-::::~
-::::
-:::^  %has-match  "(A|B)*CD"
-::~["CD "]
-::~
-::::
-:::^  %has-match  "(AB)*?\\01"
-::~["ABABAB"]
-::~
-::::
-:::^  %has-match  "(?<!bar)foo"
-::~["foo" "catfood" "arfootle" "rfoosh"]
-::~["barfoo" "towbarfoo"]
-::::
-:::^  %has-match  "\\w\{3}(?<!bar)foo"
-::~["catfood"]
-::~["foo" "barfoo" "towbarfoo"]
-::::
-:::^  %has-match  "\\Aabc\\z/"
-::~["abc"]
-::~["abc\0a   " "qqq\0aabc" "abc\0azzz" "qqq\0aabc\0azzz"]
-::::
-:::^  %has-match  "(?>.*/)foo"
-::~["/this/is/a/very/long/line/in/deed/with/very/many/slashes/in/and/foo"]
-::~["/this/is/a/very/long/line/in/deed/with/very/many/slashes/in/it/you/see/"]
-::::
-:::^  %has-match  "(?>(\\.\\d\\d[1-9]?))\\d+"
-::~["1.230003938" "1.875000282"]
-::~["1.235 "]
-::::
-::::
-:::^  %has-match  "(\\d+)(\\w)"
-::~["12345a" "12345+ "]
+:^  %has-match  "P[^*]TAIRE[^*]\{1,}?LL"
+~["xxxxxxxxxxxPSTAIREISLLxxxxxxxxx"]
+~
+::
+:^  %has-match  "(.*?)(\\d*)"
+~["I have 2 numbers: 53147"]
+~
+::
+:^  %has-match  "(.*\\D)(\\d+)$"
+~["I have 2 numbers: 53147"]
+~
+::
+:^  %has-match  "\\d\\d\\/\\d\\d\\/\\d\\d\\d\\d"
+~["01/01/2000"]
+~
+::
+:^  %has-match  "word (?:[a-zA-Z0-9]+ )\{0,10}otherword"
+~["word cat dog elephant mussel cow horse canary baboon snake shark otherword" "word cat dog elephant mussel cow horse canary baboon snake shark"]
+~
+::
+:^  %has-match  "word (?:[a-zA-Z0-9]+ )\{0,300}otherword"
+~["word cat dog elephant mussel cow horse canary baboon snake shark the quick brown fox and the lazy dog and several other words getting close to thirty by now I hope"]
+~
+::
+:^  %has-match  "^(a)\{0,0}"
+~["bcd" "abc" "aab"]
+~
+::
+:^  %has-match  "^(a)\{0,1}"
+~["bcd" "abc" "aab"]
+~
+::
+:^  %has-match  "^(a)\{0,2}"
+~["bcd" "abc" "aab"]
+~
+::
+:^  %has-match  "^(a)\{0,3}"
+~["bcd" "abc" "aab" "aaa"]
+~
+::
+:^  %has-match  "^(a)\{0,}"
+~["bcd" "abc" "aab" "aaa" "aaaaaaaa"]
+~
+::
+:^  %has-match  "^(a)\{1,1}"
+~["bcd" "abc" "aab"]
+~
+::
+:^  %has-match  "^(a)\{1,2}"
+~["bcd" "abc" "aab"]
+~
+::
+:^  %has-match  "^(a)\{1,3}"
+~["bcd" "abc" "aab" "aaa"]
+~
+::
+:^  %has-match  "^(a)\{1,}"
+~["bcd" "abc" "aab" "aaa" "aaaaaaaa"]
+~
+::
+:^  %has-match  ".*\\.gif"
+~["borfle\0abib.gif\0ano"]
+~
+::
+:^  %has-match  ".\{0,}\\.gif"
+~["borfle\0abib.gif\0ano"]
+~
+::
+:^  %has-match  ".*\\.gif"
+~["borfle\0abib.gif\0ano"]
+~
+::
+:^  %has-match  ".*\\.gif"
+~["borfle\0abib.gif\0ano"]
+~
+::
+:^  %has-match  ".*$"
+~["borfle\0abib.gif\0ano"]
+~
+::
+:^  %has-match  "(.*X|^B)"
+~["abcde\0a1234Xyz" "BarFoo" "abcde\0aBar"]
+~
+::
+:^  %has-match  "^\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d"
+~["123456654321"]
+~
+::
+:^  %has-match  "^(a|b|c)\{12}"
+~["abcabcabcabc "]
+~
+::
+:^  %has-match  "^[abcdefghijklmnopqrstuvwxy0123456789]"
+~["n"]
+~["z"]
+::
+:^  %has-match  "abcde\{0,0}"
+~["abcd"]
+~["abce"]
+::
+:^  %has-match  "ab(c)\{0,0}d"
+~["abd"]
+~["abcd"]
+::
+::
+:^  %has-match  "\"([^\\\\\"]+|\\\\.)*\""
+~["the \"quick\" brown fox" "\"the \\\"quick\\\" brown fox\" "]
+~
+::
+:^  %has-match  ""
+~["abc"]
+~
+::
+:::^  %has-match  "<tr([\\w\\W\\s\\d][^<>]\{0,})><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\d]\{0,}\\.)(.*)((<BR>([\\w\\W\\s\\d][^<>]\{0,})|[\\s]\{0,}))<\\/a><\\/TD><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\w\\W\\s\\d][^<>]\{0,})<\\/TD><TD([\\w\\W\\s\\d][^<>]\{0,})>([\\w\\W\\s\\d][^<>]\{0,})<\\/TD><\\/TR>"
+::~["<TR BGCOLOR='#DBE9E9'><TD align=left valign=top>43.<a href='joblist.cfm?JobID=94 6735&Keyword='>Word Processor<BR>(N-1286)</a></TD><TD align=left valign=top>Lega lstaff.com</TD><TD align=left valign=top>CA - Statewide</TD></TR>"]
 ::~
 ::
-:::^  %has-match  "((?>\\d+))(\\w)"
-::~["12345a"]
-::~["12345+ "]
-::::
-:::^  %has-match  "(?>a+)b"
-::~["aaab"]
-::~
-::::
-:::^  %has-match  "((?>a+)b)"
-::~["aaab"]
-::~
-::::
-:::^  %has-match  "(?>(a+))b"
-::~["aaab"]
-::~
-::::
-:::^  %has-match  "(?>b)+"
-::~["aaabbbccc"]
-::~
-::::
-:::^  %has-match  "(?>a+|b+|c+)*c"
-::~["aaabbbbccccd"]
-::~
-::::
-::::
-:::^  %has-match  "\\(((?>[^()]+)|\\([^()]+\\))+\\)/ "
-::~
-::~["((()aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   "]
-::::
-::::
-::::
-:::^  %has-match  "(a b(?x)c d (?-x)e f)"
-::~["a bcde f"]
-::~["abcdef  "]
-::::
-::::
-::::
-::::
-::::
-:::^  %has-match  "(?s-i:more.*than).*million/"
-::~["more than million" "more than MILLION" "more \0a than Million "]
-::~["MORE THAN MILLION    " "more \0a than \0a million "]
-::::
-::::
-::::
-::::
-:::^  %has-match  "(?<=a(?i)b)(\\w\\w)c"
-::~["abxxc" "aBxxc"]
-::~["Abxxc" "ABxxc" "abxxC      "]
-::::
-:::^  %has-match  "(?:(a)|b)(?(1)A|B)"
-::~["aA" "bB"]
-::~["aB" "bA    "]
-::::
-:::^  %has-match  "^(a)?(?(1)a|b)+$"
-::~["aa" "b" "bb  "]
-::~["ab   "]
-::::
-:::^  %has-match  "^(?(?=abc)\\w\{3}:|\\d\\d)$"
-::~["abc:" "12"]
-::~["123" "xyz    "]
-::::
-::::
-:::^  %has-match  "(?(?<=foo)bar|cat)"
-::~["foobar" "cat" "fcat" "focat   "]
-::~["foocat  "]
-::::
-:::^  %has-match  "(?(?<!foo)cat|bar)"
-::~["foobar" "cat" "fcat" "focat   "]
-::~["foocat  "]
-::::
-:::^  %has-match  "( \\( )? [^()]+ (?(1) \\) |) /"
-::~["abcd" "(abcd)" "the quick (abcd) fox" "(abcd   "]
-::~
-::::
-:::^  %has-match  "( \\( )? [^()]+ (?(1) \\) ) /"
-::~["abcd" "(abcd)" "the quick (abcd) fox" "(abcd   "]
-::~
-::::
-:::^  %has-match  "^(?(2)a|(1)(2))+$"
-::~["12" "12a" "12aa"]
-::~["1234    "]
-::::
-:::^  %has-match  "((?i)blah)\\s+\\01"
-::~["blah blah" "BLAH BLAH" "Blah Blah" "blaH blaH"]
-::~["blah BLAH" "Blah blah      " "blaH blah "]
-::::
-:::^  %has-match  "((?i)blah)\\s+(?i:\\01)"
-::~["blah blah" "BLAH BLAH" "Blah Blah" "blaH blaH" "blah BLAH" "Blah blah      " "blaH blah "]
-::~
-::::
-::::
-:::^  %has-match  "(abc|)+"
-::~["abc" "abcabc" "abcabcabc" "xyz      "]
-::~
-::::
-::::
-::::
-::::
-::::
-::::
-::::
-::::
-::::
-::::
-::::
-:::^  %has-match  "((?>a*?))*"
-::~["aaaaa" "aabbaa "]
-::~
-::::
-::::
-:::^  %has-match  "(?<=(foo))bar\\01"
-::~["foobarfoo" "foobarfootling "]
-::~["foobar" "barfoo   "]
-::::
-::::
-:::^  %has-match  "(a(?i)bc|BB)x"
-::~["abcx" "aBCx" "bbx" "BBx"]
-::~["abcX" "aBCX" "bbX" "BBX               "]
-::::
-:::^  %has-match  "^([ab](?i)[cd]|[ef])"
-::~["ac" "aC" "bD" "elephant" "Europe " "frog" "France"]
-::~["Africa     "]
-::::
-:::^  %has-match  "^(ab|a(?i)[b-c](?m-i)d|x(?i)y|z)"
-::~["ab" "aBd" "xy" "xY" "zebra" "Zambesi"]
-::~["aCD  " "XY  "]
-::::
-:::^  %has-match  "(?<=foo\\n)^bar/"
-::~["foo\0abar"]
-::~["bar" "baz\0abar   "]
-::::
-:::^  %has-match  "(?<=(?<!foo)bar)baz"
-::~["barbaz" "barbarbaz " "koobarbaz "]
-::~["baz" "foobarbaz "]
-::::
-::::
-::::
-:::^  %has-match  "recursive references in Perl, as far as 5.11.3 - see some stuff in test #2."
-::~
-::~
-::::
-:::^  %has-match  "^(a\\01?)\{4}$"
-::~["a" "aa" "aaa" "aaaaa" "aaaaaaa" "aaaaaaaa" "aaaaaaaaa" "aaaaaaaaaa" "aaaaaaaaaaa" "aaaaaaaaaaaa" "aaaaaaaaaaaaa" "aaaaaaaaaaaaaa" "aaaaaaaaaaaaaaa" "aaaaaaaaaaaaaaaa               "]
-::~
-::::
-:::^  %has-match  "^(a\\01?)(a\\01?)(a\\02?)(a\\03?)$"
-::~["a" "aa" "aaa" "aaaa" "aaaaa" "aaaaaa" "aaaaaaa" "aaaaaaaa" "aaaaaaaaa" "aaaaaaaaaa" "aaaaaaaaaaa" "aaaaaaaaaaaa" "aaaaaaaaaaaaa" "aaaaaaaaaaaaaa" "aaaaaaaaaaaaaaa" "aaaaaaaaaaaaaaaa               "]
-::~
-::::
-::::
-:::^  %has-match  "are compatible with 5.004, but I'd rather not have to sort them out."
-::~
-::~
-::::
-:::^  %has-match  "abc"
-::~["abc" "xabcy" "ababc"]
-::~["xbc" "axc" "abx"]
-::::
-:::^  %has-match  "ab*c"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "ab*bc"
-::~["abc" "abbc" "abbbbc"]
-::~
-::::
-:::^  %has-match  ".\{1}"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  ".\{3,4}"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab\{0,}bc"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab+bc"
-::~["abbc"]
-::~["abc" "abq"]
-::::
-:::^  %has-match  "ab\{1,}bc"
-::~
-::~
-::::
-:::^  %has-match  "ab+bc"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab\{1,}bc"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab\{1,3}bc"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab\{3,4}bc"
-::~["abbbbc"]
-::~
-::::
-:::^  %has-match  "ab\{4,5}bc"
-::~
-::~["abq" "abbbbc"]
-::::
-:::^  %has-match  "ab?bc"
-::~["abbc" "abc"]
-::~
-::::
-:::^  %has-match  "ab\{0,1}bc"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "ab?bc"
-::~
-::~
-::::
-:::^  %has-match  "ab?c"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "ab\{0,1}c"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "^abc$"
-::~["abc"]
-::~["abbbbc" "abcc"]
-::::
-:::^  %has-match  "^abc"
-::~["abcc"]
-::~
-::::
-:::^  %has-match  "^abc$"
-::~
-::~
-::::
-:::^  %has-match  "abc$"
-::~["aabc"]
-::~["aabc" "aabcd"]
-::::
-:::^  %has-match  "^"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "$"
-::~["abc"]
-::~
-::::
-:::^  %has-match  "a.c"
-::~["abc" "axc"]
-::~
-::::
-:::^  %has-match  "a.*c"
-::~["axyzc"]
-::~
-::::
-:::^  %has-match  "a[bc]d"
-::~["abd"]
-::~["axyzd" "abc"]
-::::
-:::^  %has-match  "a[b-d]e"
-::~["ace"]
-::~
-::::
-:::^  %has-match  "a[b-d]"
-::~["aac"]
-::~
-::::
-:::^  %has-match  "a[-b]"
-::~["a-"]
-::~
-::::
-:::^  %has-match  "a[b-]"
-::~["a-"]
-::~
-::::
-:::^  %has-match  "a]"
-::~["a]"]
-::~
-::::
-:::^  %has-match  "a[]]b"
-::~["a]b"]
-::~
-::::
-:::^  %has-match  "a[^bc]d"
-::~["aed"]
-::~["abd" "abd"]
-::::
-:::^  %has-match  "a[^-b]c"
-::~["adc"]
-::~
-::::
-:::^  %has-match  "a[^]b]c"
-::~["adc"]
-::~["a-c" "a]c"]
-::::
-:::^  %has-match  "\\ba\\b"
-::~["a-" "-a" "-a-"]
-::~
-::::
-:::^  %has-match  "\\by\\b"
-::~
-::~["xy" "yz" "xyz"]
-::::
-:::^  %has-match  "\\ba\\B"
-::~
-::~["a-" "-a" "-a-"]
-::::
-:::^  %has-match  "\\By\\b"
-::~["xy"]
-::~
-::::
-:::^  %has-match  "\\by\\B"
-::~["yz"]
-::~
-::::
-:::^  %has-match  "\\By\\B"
-::~["xyz"]
-::~
-::::
-:::^  %has-match  "\\w"
-::~["a"]
-::~
-::::
-:::^  %has-match  "\\W"
-::~["-"]
-::~["-" "a"]
-::::
-:::^  %has-match  "a\\sb"
-::~["a b"]
-::~
-::::
-:::^  %has-match  "a\\Sb"
-::~["a-b"]
-::~["a-b" "a b"]
-::::
-:::^  %has-match  "\\d"
-::~["1"]
-::~
-::::
-:::^  %has-match  "\\D"
-::~["-"]
-::~["-" "1"]
-::::
-:::^  %has-match  "[\\w]"
-::~["a"]
-::~
-::::
-:::^  %has-match  "[\\W]"
-::~["-"]
-::~["-" "a"]
-::::
-:::^  %has-match  "a[\\s]b"
-::~["a b"]
-::~
-::::
-:::^  %has-match  "a[\\S]b"
-::~["a-b"]
-::~["a-b" "a b"]
-::::
-:::^  %has-match  "[\\d]"
-::~["1"]
-::~
-::::
-:::^  %has-match  "[\\D]"
-::~["-"]
-::~["-" "1"]
-::::
-:::^  %has-match  "ab|cd"
-::~["abc" "abcd"]
-::~
-::::
-:::^  %has-match  "()ef"
-::~["def"]
-::~
-::::
-:::^  %has-match  "$b"
-::~
-::~
-::::
-:::^  %has-match  "a\\(b"
-::~["a(b"]
-::~
-::::
-:::^  %has-match  "a\\(*b"
-::~["ab" "a((b"]
-::~
-::::
-:::^  %has-match  "a\\\\b"
-::~["a\\b"]
-::~
+:^  %has-match  "a.b"
+~["acb"]
+~["a\0ab"]
+::
+:^  %has-match  "^(b+?|a)\{1,2}?c"
+~["bac" "bbac" "bbbac" "bbbbac" "bbbbbac "]
+~
+::
+:^  %has-match  "\00\\\{ab}"
+~["\00\{ab}"]
+~
+::
+:^  %has-match  "(A|B)*CD"
+~["CD "]
+~
+::
+:^  %has-match  "(AB)*?\\1"
+~["ABABAB"]
+~
+::
+:^  %has-match  "(?<!bar)foo"
+~["foo" "catfood" "arfootle" "rfoosh"]
+~["barfoo" "towbarfoo"]
+::
+:^  %has-match  "\\w\{3}(?<!bar)foo"
+~["catfood"]
+~["foo" "barfoo" "towbarfoo"]
+::
+:^  %has-match  "\\Aabc\\z"
+~["abc"]
+~["abc\0a   " "qqq\0aabc" "abc\0azzz" "qqq\0aabc\0azzz"]
+::
+:^  %has-match  "(?>.*/)foo"
+~["/this/is/a/very/long/line/in/deed/with/very/many/slashes/in/and/foo"]
+~["/this/is/a/very/long/line/in/deed/with/very/many/slashes/in/it/you/see/"]
+::
+:^  %has-match  "(?>(\\.\\d\\d[1-9]?))\\d+"
+~["1.230003938" "1.875000282"]
+~["1.235 "]
+::
+::
+:^  %has-match  "(\\d+)(\\w)"
+~["12345a" "12345+ "]
+~
+:^  %has-match  "((?>\\d+))(\\w)"
+~["12345a"]
+~["12345+ "]
+::
+:^  %has-match  "(?>a+)b"
+~["aaab"]
+~
+::
+:^  %has-match  "((?>a+)b)"
+~["aaab"]
+~
+::
+:^  %has-match  "(?>(a+))b"
+~["aaab"]
+~
+::
+:^  %has-match  "(?>b)+"
+~["aaabbbccc"]
+~
+::
+:^  %has-match  "(?>a+|b+|c+)*c"
+~["aaabbbbccccd"]
+~
+::
+::
+:^  %has-match  "\\(((?>[^()]+)|\\([^()]+\\))+\\)/ "
+~
+~["((()aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   "]
+::
+::
+::
+:^  %has-match  "(a b(?x)c d (?-x)e f)"
+~["a bcde f"]
+~["abcdef  "]
+::
+::
+::
+::
+::
+:^  %has-match  "(?s-i:more.*than).*million/"
+~["more than million" "more than MILLION" "more \0a than Million "]
+~["MORE THAN MILLION    " "more \0a than \0a million "]
+::
+::
+::
+::
+:^  %has-match  "(?<=a(?i)b)(\\w\\w)c"
+~["abxxc" "aBxxc"]
+~["Abxxc" "ABxxc" "abxxC      "]
+::
+:^  %has-match  "(?:(a)|b)(?(1)A|B)"
+~["aA" "bB"]
+~["aB" "bA    "]
+::
+:^  %has-match  "^(a)?(?(1)a|b)+$"
+~["aa" "b" "bb  "]
+~["ab   "]
+::
+:^  %has-match  "^(?(?=abc)\\w\{3}:|\\d\\d)$"
+~["abc:" "12"]
+~["123" "xyz    "]
+::
+::
+:^  %has-match  "(?(?<=foo)bar|cat)"
+~["foobar" "cat" "fcat" "focat   "]
+~["foocat  "]
+::
+:^  %has-match  "(?(?<!foo)cat|bar)"
+~["foobar" "cat" "fcat" "focat   "]
+~["foocat  "]
+::
+:^  %has-match  "( \\( )? [^()]+ (?(1) \\) |) /"
+~["abcd" "(abcd)" "the quick (abcd) fox" "(abcd   "]
+~
+::
+:^  %has-match  "( \\( )? [^()]+ (?(1) \\) ) /"
+~["abcd" "(abcd)" "the quick (abcd) fox" "(abcd   "]
+~
+::
+:^  %has-match  "^(?(2)a|(1)(2))+$"
+~["12" "12a" "12aa"]
+~["1234    "]
+::
+:^  %has-match  "((?i)blah)\\s+\\01"
+~["blah blah" "BLAH BLAH" "Blah Blah" "blaH blaH"]
+~["blah BLAH" "Blah blah      " "blaH blah "]
+::
+:^  %has-match  "((?i)blah)\\s+(?i:\\01)"
+~["blah blah" "BLAH BLAH" "Blah Blah" "blaH blaH" "blah BLAH" "Blah blah      " "blaH blah "]
+~
+::
+::
+:^  %has-match  "(abc|)+"
+~["abc" "abcabc" "abcabcabc" "xyz      "]
+~
+::
+::
+::
+::
+::
+::
+::
+::
+::
+::
+::
+:^  %has-match  "((?>a*?))*"
+~["aaaaa" "aabbaa "]
+~
+::
+::
+:^  %has-match  "(?<=(foo))bar\\01"
+~["foobarfoo" "foobarfootling "]
+~["foobar" "barfoo   "]
+::
+::
+:^  %has-match  "(a(?i)bc|BB)x"
+~["abcx" "aBCx" "bbx" "BBx"]
+~["abcX" "aBCX" "bbX" "BBX               "]
+::
+:^  %has-match  "^([ab](?i)[cd]|[ef])"
+~["ac" "aC" "bD" "elephant" "Europe " "frog" "France"]
+~["Africa     "]
+::
+:^  %has-match  "^(ab|a(?i)[b-c](?m-i)d|x(?i)y|z)"
+~["ab" "aBd" "xy" "xY" "zebra" "Zambesi"]
+~["aCD  " "XY  "]
+::
+:^  %has-match  "(?<=foo\\n)^bar/"
+~["foo\0abar"]
+~["bar" "baz\0abar   "]
+::
+:^  %has-match  "(?<=(?<!foo)bar)baz"
+~["barbaz" "barbarbaz " "koobarbaz "]
+~["baz" "foobarbaz "]
+::
+::
+::
+:^  %has-match  "recursive references in Perl, as far as 5.11.3 - see some stuff in test #2."
+~
+~
+::
+:^  %has-match  "^(a\\01?)\{4}$"
+~["a" "aa" "aaa" "aaaaa" "aaaaaaa" "aaaaaaaa" "aaaaaaaaa" "aaaaaaaaaa" "aaaaaaaaaaa" "aaaaaaaaaaaa" "aaaaaaaaaaaaa" "aaaaaaaaaaaaaa" "aaaaaaaaaaaaaaa" "aaaaaaaaaaaaaaaa               "]
+~
+::
+:^  %has-match  "^(a\\01?)(a\\01?)(a\\02?)(a\\03?)$"
+~["a" "aa" "aaa" "aaaa" "aaaaa" "aaaaaa" "aaaaaaa" "aaaaaaaa" "aaaaaaaaa" "aaaaaaaaaa" "aaaaaaaaaaa" "aaaaaaaaaaaa" "aaaaaaaaaaaaa" "aaaaaaaaaaaaaa" "aaaaaaaaaaaaaaa" "aaaaaaaaaaaaaaaa               "]
+~
+::
+::
+:^  %has-match  "are compatible with 5.004, but I'd rather not have to sort them out."
+~
+~
+::
+:^  %has-match  "abc"
+~["abc" "xabcy" "ababc"]
+~["xbc" "axc" "abx"]
+::
+:^  %has-match  "ab*c"
+~["abc"]
+~
+::
+:^  %has-match  "ab*bc"
+~["abc" "abbc" "abbbbc"]
+~
+::
+:^  %has-match  ".\{1}"
+~["abbbbc"]
+~
+::
+:^  %has-match  ".\{3,4}"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab\{0,}bc"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab+bc"
+~["abbc"]
+~["abc" "abq"]
+::
+:^  %has-match  "ab\{1,}bc"
+~
+~
+::
+:^  %has-match  "ab+bc"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab\{1,}bc"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab\{1,3}bc"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab\{3,4}bc"
+~["abbbbc"]
+~
+::
+:^  %has-match  "ab\{4,5}bc"
+~
+~["abq" "abbbbc"]
+::
+:^  %has-match  "ab?bc"
+~["abbc" "abc"]
+~
+::
+:^  %has-match  "ab\{0,1}bc"
+~["abc"]
+~
+::
+:^  %has-match  "ab?bc"
+~
+~
+::
+:^  %has-match  "ab?c"
+~["abc"]
+~
+::
+:^  %has-match  "ab\{0,1}c"
+~["abc"]
+~
+::
+:^  %has-match  "^abc$"
+~["abc"]
+~["abbbbc" "abcc"]
+::
+:^  %has-match  "^abc"
+~["abcc"]
+~
+::
+:^  %has-match  "^abc$"
+~
+~
+::
+:^  %has-match  "abc$"
+~["aabc"]
+~["aabc" "aabcd"]
+::
+:^  %has-match  "^"
+~["abc"]
+~
+::
+:^  %has-match  "$"
+~["abc"]
+~
+::
+:^  %has-match  "a.c"
+~["abc" "axc"]
+~
+::
+:^  %has-match  "a.*c"
+~["axyzc"]
+~
+::
+:^  %has-match  "a[bc]d"
+~["abd"]
+~["axyzd" "abc"]
+::
+:^  %has-match  "a[b-d]e"
+~["ace"]
+~
+::
+:^  %has-match  "a[b-d]"
+~["aac"]
+~
+::
+:^  %has-match  "a[-b]"
+~["a-"]
+~
+::
+:^  %has-match  "a[b-]"
+~["a-"]
+~
+::
+:^  %has-match  "a]"
+~["a]"]
+~
+::
+:^  %has-match  "a[]]b"
+~["a]b"]
+~
+::
+:^  %has-match  "a[^bc]d"
+~["aed"]
+~["abd" "abd"]
+::
+:^  %has-match  "a[^-b]c"
+~["adc"]
+~
+::
+:^  %has-match  "a[^]b]c"
+~["adc"]
+~["a-c" "a]c"]
+::
+:^  %has-match  "\\ba\\b"
+~["a-" "-a" "-a-"]
+~
+::
+:^  %has-match  "\\by\\b"
+~
+~["xy" "yz" "xyz"]
+::
+:^  %has-match  "\\ba\\B"
+~
+~["a-" "-a" "-a-"]
+::
+:^  %has-match  "\\By\\b"
+~["xy"]
+~
+::
+:^  %has-match  "\\by\\B"
+~["yz"]
+~
+::
+:^  %has-match  "\\By\\B"
+~["xyz"]
+~
+::
+:^  %has-match  "\\w"
+~["a"]
+~
+::
+:^  %has-match  "\\W"
+~["-"]
+~["-" "a"]
+::
+:^  %has-match  "a\\sb"
+~["a b"]
+~
+::
+:^  %has-match  "a\\Sb"
+~["a-b"]
+~["a-b" "a b"]
+::
+:^  %has-match  "\\d"
+~["1"]
+~
+::
+:^  %has-match  "\\D"
+~["-"]
+~["-" "1"]
+::
+:^  %has-match  "[\\w]"
+~["a"]
+~
+::
+:^  %has-match  "[\\W]"
+~["-"]
+~["-" "a"]
+::
+:^  %has-match  "a[\\s]b"
+~["a b"]
+~
+::
+:^  %has-match  "a[\\S]b"
+~["a-b"]
+~["a-b" "a b"]
+::
+:^  %has-match  "[\\d]"
+~["1"]
+~
+::
+:^  %has-match  "[\\D]"
+~["-"]
+~["-" "1"]
+::
+:^  %has-match  "ab|cd"
+~["abc" "abcd"]
+~
+::
+:^  %has-match  "()ef"
+~["def"]
+~
+::
+:^  %has-match  "$b"
+~
+~
+::
+:^  %has-match  "a\\(b"
+~["a(b"]
+~
+::
+:^  %has-match  "a\\(*b"
+~["ab" "a((b"]
+~
+::
+:^  %has-match  "a\\\\b"
+~["a\\b"]
+~
 ::::
 :::^  %has-match  "((a))"
 ::~["abc"]

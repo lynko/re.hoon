@@ -71,10 +71,11 @@
 +$  rult  _^|(|:($:edgt $:mist))
 +$  fret  [p=[p=@ud q=(unit @ud)] q=(unit ?(%'?' %'+'))]
 +$  post
-  $?  %digit
+  $?  %digit  %neg-digit
       %lower
       %upper
-      %space
+      %space  %neg-space
+      %word   %neg-word
   ==
 ::+$  belt
 ::  $:  p=(set @t)  :: individual characters
@@ -125,7 +126,7 @@
     =+  yit=(a vex)
     ?~  yit
       ?:(neg ~[vex] yit)
-    ?:(neg yit ~[vex])
+    ?:(neg ~ ~[vex])
   =+  tub=`nail`[[1 1] tex]
   |-
   ?~  q.tub
@@ -229,6 +230,18 @@
   :: Tell if an atom is in a certain range
   |=  [n=@ a=@ b=@]  ^-  ?
   &((gte n a) (lte n b))
+++  wort
+  :: Tell if a character is a word character
+  |=  [c=@t]
+  ?|  (rant c 'A' 'Z')
+      (rant c 'a' 'z')
+      (rant c '0' '9')
+      =('_' c)
+  ==
+++  spat
+  :: Tell if a character is a space character
+  |=  [c=@t]  ^-  ?
+  (~(has in (silt " \09\0a\0b\0c\0d")) c)
 ++  flit
   :: Turn a set of characters and ranges into a character class regex
   |=  [neg=? bil=belt]  ^-  rult
@@ -245,9 +258,13 @@
         (rant i.q.q.vex i.bil)
       ?-  r.i.bil
         %digit  (rant i.q.q.vex '0' '9')
+        %neg-digit  !(rant i.q.q.vex '0' '9')
         %upper  (~(has by cass-map:ul:l10n) i.q.q.vex)
         %lower  (~(has by cuss-map:ul:l10n) i.q.q.vex)
-        %space  |(=(' ' i.q.q.vex) =('\09' i.q.q.vex))
+        %space  (spat i.q.q.vex)
+        %neg-space  !(spat i.q.q.vex)
+        %word   (wort i.q.q.vex)
+        %neg-word  !(wort i.q.q.vex)
       ==
     &
   $(bil t.bil)
@@ -287,18 +304,27 @@
     ?~  q.tub  (flop beh)
     $(tub [(lust i.q.tub p.tub) t.q.tub], beh [i.q.tub beh])
   (flop beh)
+++  beet  ^-  rult
+  ::  Match only the very beginning of text
+  |=  [vex=edgt]  ^-  mist
+  ?:  =([1 1] p.q.vex)
+    ~[vex]
+  ~
+++  leet  ^-  rult
+  :: Match only the very end of text
+  |=  [vex=edgt]  ^-  mist
+  ?~  q.q.vex  ~[vex]
+  ~
 ::
 ::  Parser functions
 ::
 ++  top
   %+  knee  *rult
   |.  ~+
-  ;~  simu  next
-    %+  cook
-      |=  [a=rult b=(unit rult)]
-      ?~(b a (salt a u.b))
-    ;~(plug mid (punt ;~(pfix bar top)))
-  ==
+  %+  cook
+    |=  [a=rult b=(unit rult)]
+    ?~(b a (salt a u.b))
+  ;~(plug mid (punt ;~(pfix bar top)))
 ++  mid
   %+  knee  *rult
   |.  ~+
@@ -382,7 +408,7 @@
   :_  dot
   |=  [vex=edgt]  ^-  mist
   ?~  q.q.vex  ~
-  ?:  =('\0a' i.q.q.vex)  ~
+  ?:  |(=('\0a' i.q.q.vex) =('\0d' i.q.q.vex))  ~
   [p.vex [p.p.q.vex +(q.p.q.vex)] t.q.q.vex]~
 ++  kan  :: ^ anchor
   %-  cold  :_  ket
@@ -397,9 +423,9 @@
   ?~  q.q.vex  ~[vex]
   ?:  =('\0a' i.q.q.vex)  ~[vex]
   ~
-++  bel  ;~(pose ;~(plug next ;~(pfix hep cil)) pos next)
-++  cil  ;~(less hep ser ;~(pose cha ;~(pfix bas ser) ;~(less bas next)))
-++  cel  ;~(pose ;~(plug cil ;~(pfix hep cil)) cil pos)
+++  bel  ;~(pose ;~(plug ;~(pose ser hep cil) ;~(pfix hep cil)) ser hep cel)
+++  cil  ;~(less hep ser ;~(pose cha ;~(pfix bas next) ;~(less bas next)))
+++  cel  ;~(pose ;~(plug cil ;~(pfix hep cil)) pos cep cil)
 ++  pos
   ;~  pose
     %+  ifix  [(jest '[:') (jest ':]')]
@@ -450,6 +476,12 @@
           ['f' '\0c']
           ['r' '\0d']
           ['e' '\1b']
+          ['"' '"']
+          ['\'' '\'']
+          ['\\' '\\']
+          ['@' '@']
+          ['-' '-']
+          [']' ']']
        ==
     ::
       %+  cook  |=([a=@ b=@] (add (mul 16 a) b))
@@ -466,6 +498,10 @@
         ['D' (flit & `belt`~[``%digit])]
         ['s' (flit | `belt`~[``%space])]
         ['S' (flit & `belt`~[``%space])]
+        ['w' (flit | `belt`~[``%word])]
+        ['W' (flit & `belt`~[``%word])]
+        ['A' beet]
+        ['Z' leet]
     ==
   ==
 ++  cep
@@ -473,8 +509,13 @@
     %-  sear  :_  next
     %~  get  by
     ^-  (map @t clat)  %-  malt
-    :~  ['d' '0' '9']
-        ['D' '0' '9']
+    ^-  (list [@t clat])
+    :~  ['d' ``%digit]
+        ['D' ``%neg-digit]
+        ['s' ``%space]
+        ['S' ``%neg-space]
+        ['w' ``%word]
+        ['W' ``%neg-word]
     ==
   ==
 ::
