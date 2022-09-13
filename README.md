@@ -8,52 +8,35 @@ WIP
 
 ### Files
 
-- `lib/re.hoon`:  A regular expressions library.
-- `lib/l10n.hoon`:  Dependency.  A localization library from [https://github.com/sigilante/l10n].
-- `lib/regex-test-1.hoon`:  A test suite derived from the [PCRE repository][PCRE].
-- `gen/re.hoon`:  A convenience generator that produces the library.
-- `gen/re-test.hoon`:  Run a test suite for `lib/re.hoon`.
-- `gen/regex-test-1.hoon`:  Run the PCRE-derived test suite.
+- `lib/regex.hoon`:  A regular expressions library.
+- `lib/regex-test.hoon`:  A test runner.
+- `lib/regex-test-pcre.hoon`:  A test suite derived from the [PCRE repository][PCRE].
+- `gen/regex-test.hoon`:  Run a test suite for the regex library.
+- `gen/regex-test-pcre.hoon`:  Run the PCRE-derived test suite.
 
 [PCRE]: https://github.com/luvit/pcre
 
-As `lib/regex-test-1.hoon` is a derivative work, it is governed by the same license as PCRE (see [pcre-license.txt]).
+As `lib/regex-test-1.hoon` is a derivative work, it is governed by the same license as PCRE (see [pcre-license.txt](pcre-license.txt)).
 
 ### Usage
 
-  ```
-  /+  re
-  ...
-    ...
-    =/  m=(unit match:re)
-      (run:re "reg.u(lar)+ expr*ssion(s|$)*" target-text)
-    ?~  m  ...  :: match not found
-    :: match found
-  ```
+Include `regex.hoon` with Ford, such as in `/+  regex`.
 
-`match:re` is a type containing capture groups and a copy of the text  that was matched.
+`++run:regex` takes a regular expression and a target string, returning the first match.  The product is of type `(unit match)`, where `+$match` is a tuple of capture groups:  `num`, a map from group number to captured text; and `nom`, a map from group name to captured text.  (Named captures are unimplemented but forthcoming.) Captured text is represented as a tuple of `pint` (the location of the captured text) and `tape` (the text itself).
+
+In this example, `^(11+)\\1$` tests if a unary number is composite.  Because of the leftmost-longest rule, the capture group `\\1` always refers to the subject's largest prime factor.
 
   ```
-  +$  match  [p=(map @ud [p=pint q=tape]) q=[p=pint q=tape]]
+  > (run:regex "^(11+)\\1$" "1111111")
+  ~
+  > (run:regex "^(11+)\\1$" "11111111")
+  /+  regex
+  [ ~
+    [   num
+      { [p=1 q=[p=[p=[p=1 q=1] q=[p=1 q=5]] q="1111"]]
+        [p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=9]] q="11111111"]]
+      }
+      nom={}
+    ]
+  }
   ```
-
-### Features
-
-Working:
-
-- Alternation
-- Repetition (greedy, possessive, bounded)
-- Anchors `^` and `$`
-- Character classes (but missing some POSIX classes)
-- Capture groups
-- Backreferences
-- Lookaround (forward, backward, positive, negative)
-- Most escape codes
-
-Unimplemented:
-
-- Non-greedy matching
-- Case-insensitive matching
-- Leftmost-longest selection
-
-Note that other than nongreedy tests, most tests that fail revolve around features that won't be implemented, such as non-backtracking patterns `(?>...)` or octal sequences like `\377`.  Some bugs have been exposed though, and I'm cleaning them up as I find them.
