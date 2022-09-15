@@ -24,10 +24,8 @@
   =|  [passes=@ud failures=@ud]
   |-
   ?~  lis
-    ~&  %+  weld  "Finished tests. "
-        ?:  =(0 failures)
-          "Passed {(scow %ud passes)}/{(scow %ud passes)}"
-        =+  total=(scow %ud (add passes failures))
+    ~&  =+  total=(scow %ud (add passes failures))
+        %+  weld  "Finished tests. "
         %+  weld  "Failed {(scow %ud failures)}/{total} "
         "(passed {(scow %ud passes)})"
     ~
@@ -71,7 +69,7 @@
       |=  [a=(pair @u tape) b=(pair @u tape)]
       (lth p.a p.b)
     ?.  =(gur captures.i.lis)
-      ~&  "failed grouping:  /{pattern.i.lis}/ ~~ {~(rt at (crip subject.i.lis))}"
+      ~&  "wrong grouping:  /{pattern.i.lis}/ ~~ {~(rt at (crip subject.i.lis))}"
       ~&  [%need captures.i.lis]
       ~&  [%have gur]
       $(lis t.lis, failures +(failures))

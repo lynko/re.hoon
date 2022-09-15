@@ -1,7 +1,7 @@
 :: Todo:
 :: - Error messaging for invalid regexes
-:: - Convenience function for string validation
 :: - ++set-text to change the subject of a parsed regex
+:: - Allow a gate in place of substitution string in sub/gsub
 
 !:  !?  140
 ::
@@ -49,9 +49,6 @@
 |_  [sat=stat]
 +*  self  .
 ::
-::
-:: These can be called directly, as in `(run:re <pattern> <subject>)`.
-::
 ++  run
   ::  Find the first match of a regex
   |=  [pattern=tape subject=tape]  ^-  (unit match)
@@ -75,13 +72,7 @@
   ?~  res  subject
   ;:  weld
     q:(lant:of p.p.p.p.u.res sut.sat)
-  ::
-::    ?-  repl
-::      tape  repl
-::      ment  (repl q.p.u.res)
-::    ==
     repl
-  ::
     q.tub.q.u.res
   ==
 ++  gsub
@@ -99,12 +90,9 @@
   %=  $
     lis  :_  lis
          ^-  tape
-         %+  weld  q:(lant:of p.p.p.p.u.res tub.sat)
+         %+  weld
+           q:(lant:of p.p.p.p.u.res tub.sat)
          repl
-::         ?-  repl
-::           tape  repl
-::           ment  (repl q.p.u.res)
-::         ==
   ::
     sat  q.u.res
   ==
@@ -136,7 +124,7 @@
   `sat(mar (capt:of 0 u.rel))
 ::
 ::
-::  This arm operates on a custom sample.  Use as in:
+::  `++next` operates on a custom sample.  Use like so:
 ::
 ::    =/  sat=stat
 ::      (start:regex pattern-text subject-text)
@@ -249,6 +237,19 @@
     ?:  (past p.p.u.ua p.p.u.ub)  a
     ?:  (past q.p.u.ua q.p.u.ub)  b
     a
+  ++  walt
+    ::  Determine if any mast ends at a given hair
+    |=  [har=hair mix=mist]  ^-  ?
+    ?~  mix  |
+    ?+  -.mix
+        |-
+        ?~  lis.mix  |
+        ?:  ^$(mix i.lis.mix)  &
+        $(lis.mix t.lis.mix)
+      ::
+        ~
+      =(har p.q.mas.mix)
+    ==
   ::
   ::
   :: Rule builders
@@ -278,7 +279,7 @@
       [[p.q.mas p.q.mes] q:(lant p.q.mes q.mas)]
     ==
   ++  gist
-    ::  `jest` but for tapes
+    ::  Match a string literally
     |=  [tap=tape]  ^-  rult
     ?:  cas.sat
       |=  [mas=mast]  ^-  mist
@@ -387,16 +388,15 @@
       ?~  mix
         ?:(neg `mas mix)
       ?:(neg ~ `mas)
-    =+  tib=sut.sat
-    =+  mos=`mast`[~ tib ~]
+    =+  mos=`mast`[~ sut.sat r.mas]
     |-
     ?~  q.q.mos
       ?:(neg `mas ~)
-    ?.  (past p.q.mos p.q.mas)
+    ?:  (past p.q.mas p.q.mos)
       ?:(neg `mas ~)
-    =+  mix=(rel mos)
-    ?~  mix  $(p.mos `i.q.q.mos, q.mos (nixt q.mos))
-    ?:(neg ~ `mas)
+    ?:  (walt p.q.mas ((capt 0 rel) mos))
+      ?:(neg ~ `mas)
+    $(p.mos `i.q.q.mos, q.mos (nixt q.mos))
   ++  bart
     ::  Create a backreference rule
     |=  [n=@u]  ^-  rult
@@ -406,53 +406,28 @@
     ((gist q.u.mat) mas)
   ++  flit
     ::  Create a character class
-    ::  TODO:  clean this up
     |=  [neg=? fal=(list flat)]  ^-  rult
     |=  [mas=mast]  ^-  mist
     ?~  q.q.mas  ~
     =*  mix  `mas(p `i.q.q.mas, q (nixt q.mas))
+    =/  cat
+      |=  [gat=_^|(|=(@t &))]
+      ?:  cas.sat  gat
+      |=  [c=@t]
+      ?|  (gat c)
+        ?:  (rant c 'A' 'Z')  (gat (add c 32))
+        ?:  (rant c 'a' 'z')  (gat (^sub c 32))
+        |
+      ==
+    =;  tac  ?:(=(neg tac) ~ mix)
     |-
-    ?~  fal  ?:(neg mix ~)
-    ?@  i.fal
-      ?:  ?:  cas.sat
-            =(i.fal i.q.q.mas)
-          ?:  (rant i.q.q.mas 'A' 'Z')
-            ?|  =(i.q.q.mas i.fal)
-                =((add i.q.q.mas 32) i.fal)
-            ==
-          ?:  (rant i.q.q.mas 'a' 'z')
-            ?|  =(i.q.q.mas i.fal)
-                =((^sub i.q.q.mas 32) i.fal)
-            ==
-          =(i.fal i.q.q.mas)
-        ?:(neg ~ mix)
-      $(fal t.fal)
-    ?@  +.i.fal
-      ?:  ?:  cas.sat
-            (rant i.q.q.mas i.fal)
-          ?:  (rant i.q.q.mas 'A' 'Z')
-            ?|  (rant i.q.q.mas i.fal)
-                (rant (add i.q.q.mas 32) i.fal)
-            ==
-          ?:  (rant i.q.q.mas 'a' 'z')
-            ?|  (rant i.q.q.mas i.fal)
-                (rant (^sub i.q.q.mas 32) i.fal)
-            ==
-          (rant i.q.q.mas i.fal)
-        ?:(neg ~ mix)
-      $(fal t.fal)
-    ?:  ?:  cas.sat
-          (hast i.q.q.mas +.i.fal)
-        ?:  (rant i.q.q.mas 'A' 'Z')
-          ?|  (hast i.q.q.mas +.i.fal)
-              (hast (add i.q.q.mas 32) +.i.fal)
-          ==
-        ?:  (rant i.q.q.mas 'a' 'z')
-          ?|  (hast i.q.q.mas +.i.fal)
-              (hast (^sub i.q.q.mas 32) +.i.fal)
-          ==
-        (hast i.q.q.mas +.i.fal)
-      ?:(neg ~ mix)
+    ?~  fal  |
+    ?:  ?@  i.fal
+          ((cat |=(c=@t =(i.fal c))) `@t`i.q.q.mas)
+        ?@  +.i.fal
+          ((cat |=(c=@t (rant c i.fal))) i.q.q.mas)
+        ((cat |=(c=@t (hast c +.i.fal))) i.q.q.mas)
+      &
     $(fal t.fal)
   ++  bont  ^-  rult
     ::  Match a word boundary
@@ -599,7 +574,7 @@
     %+  knee  *rult
     |.  ~+
     ;~  pose
-      ::(cook cont ;~(plug str mid))
+      (cook cont ;~(plug str mid))
       (cook cont ;~(plug bot mid))
       nil
     ==
@@ -620,7 +595,12 @@
     (easy `rult`|=(mas=mast `mist``mas))
   ++  str
     ::  Unquantified literal text
-    (cook gist (plus ;~(less ;~(sfix cha rep) cha)))
+    %+  cook  gist
+    %-  plus
+    ;~  less
+      ;~(sfix ;~(less cla bak ank cha) rep)
+      ;~(less cla bak ank cha)
+    ==
   ++  lit
     ::  Match a specific character
     (cook (cork trip gist) cha)
@@ -681,11 +661,9 @@
             %word   %xdigit
         ==
       ==
-    ::
-    ::  TODO:  collation elements etc
     --
   ++  cap
-    :: Capture group
+    ::  Capture group
     %+  cook
       |=  [wer=hair rel=rult]
       (capt (what wer) rel)
@@ -785,7 +763,7 @@
       ==
     ==
   ++  rep
-    :: Repetition quantifier
+    ::  Repetition quantifier
     %+  sear
       |=  [fet=fret]  ^-  (unit fret)
       ?~  q.fet  `fet
