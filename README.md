@@ -3,6 +3,7 @@
 [UF]: https://urbit.org/grants/regex-library
 
 Todo:
+
 - Write more cross-cutting tests
 - Bugfixing
 - Allow to change the subject text of a parsed regular expression
@@ -66,23 +67,23 @@ Produces:  a list of matches
 
 Crashes if the regular expression is invalid.
 
-```
-> (all:regex "\\w+" "the quick brown fox")
-~[
-  [ p=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]
-    q={[p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]]}
+  ```
+  > (all:regex "\\w+" "the quick brown fox")
+  ~[
+    [ p=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]
+      q={[p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]]}
+    ]
+    [ p=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]
+      q={[p=0 q=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]]}
+    ]
+    [ p=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]
+      q={[p=0 q=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]]}
+    ]
+    [ p=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]
+      q={[p=0 q=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]]}
+    ]
   ]
-  [ p=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]
-    q={[p=0 q=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]]}
-  ]
-  [ p=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]
-    q={[p=0 q=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]]}
-  ]
-  [ p=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]
-    q={[p=0 q=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]]}
-  ]
-]
-```
+  ```
 
 
 ### `++sub:regex`
@@ -122,12 +123,31 @@ Create an initial sample for successive matching.
 
 Accepts:  a regular expression and a match target
 
-Produces:  a sample suitable for use by `++next` (see below).
+Produces:  a sample suitable for use by `++next` (see below)
 
   ```
   > (start:regex "(abc|def?)+" "abcd abcde abcdef")
   {a sample for the regex door}
   ```
+
+
+### `++valid:regex`
+
+Unitized version of `++start`; produces nil instead of crashing.
+
+Accepts:  a regular expression and a match target
+
+Produces:  a unit containing a sample for use by `++next` (see below)
+
+  ```
+  > (valid:regex "\\w+" "")
+  [ ~
+    {a sample for the regex door}
+  ]
+  > (valid:regex "?" "")
+  ~
+  ```
+
 
 ### `++next:regex`
 
@@ -136,8 +156,8 @@ This arm requires a sample for the `regex` door.
 Produces a tuple of the next match, and a new match state.
 
   ```
-  > =r (start:re "(abc|def?)+" "abcde abcdef")
-  > =s ~(next re r)
+  > =r (start:regex "(abc|def?)+" "abcde abcdef")
+  > =s ~(next regex r)
   > s
   [ ~
     [   p
@@ -151,7 +171,7 @@ Produces a tuple of the next match, and a new match state.
       {new sample}
     ]
   ]
-  > =t ~(next re +>.s)
+  > =t ~(next regex +>.s)
   > t
   [ ~
     [   p
@@ -165,7 +185,7 @@ Produces a tuple of the next match, and a new match state.
       {new sample}
     ]
   ]
-  > ~(next re +>.t)
+  > ~(next regex +>.t)
   ~
   ```
 
