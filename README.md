@@ -2,33 +2,43 @@
 
 [UF]: https://urbit.org/grants/regex-library
 
-Todo:
-
-- Write more cross-cutting tests
-- Bugfixing
-- Allow to change the subject text of a parsed regular expression
-
 
 ## Files
 
 - `lib/regex.hoon`:  A regular expressions library.
-- `lib/regex-test.hoon`:  A test runner.
-- `lib/regex-test-ere.hoon`:  A test suite.
-- `gen/regex-test-ere.hoon`:  Run the test suite.
+- `tests/lib/regex.hoon`:  A test suite for the library.
 
 
-## Usage
+##  Types
 
-Include `regex.hoon` with Ford, such as in `/+  regex`.  Create a sample with `=+  sat=(start:regex pattern-tape subject-tape)` and get successive matches with `~(next regex sat)`, or call one of the helper functions directly as in `(run:re pattern-tape subject-tape)`.
-
-Matches produced by `regex.hoon` have the following structure:
+Regex operations usually produce either a `$range` (some text and its location within the subject) or a `$match` (a map of ranges by capture number).
 
   ```
   +$  range  (pair pint tape)
   +$  match  (pair range (map @u range))
   ```
 
-`p.match` refers to the total matched text.  `q.match` is a map of matched subpatterns according to their capture numbers.  (A `pint` is a tuple of hairs recording the start and end positions of matched text.)
+Every function that produces a `$match`, with all subcaptures, has a variant that produces only the total `$range` of matched text.
+
+
+##  Operations
+
+### `++valid:regex`
+
+Determine if a regular expression is valid.
+
+Accepts:  a regular expression
+
+Produces:  `%.y` if the regex is valid; `%.n` otherwise
+
+  ```
+  > (valid:regex "")
+  %.y
+  > (valid:regex "(?)")
+  %.n
+  > (valid:regex "[a-b-c]")
+  %.n
+  ```
 
 
 ### `++run:regex`
@@ -37,24 +47,55 @@ Find the first match of a regular expression.
 
 Accepts:  a regular expression and a match target
 
-Produces:  a unit of the first match, or nil if there is no match
+Produces:  `(unit match)`
 
 Crashes if the regular expression is invalid.
 
   ```
-  > (run:regex "[a-z]+" "Urbit")
+  > (run:regex ".+" "")
+  ~
+  > (run:regex "[a-z]+" "Abc")
+  [~ {[p=0 q=[p=[p=[p=1 q=2] q=[p=1 q=4]] q="bc"]]}]
+  > (run:regex "([a-z])+" "abc")
   [ ~
-    [ p=[p=[p=[p=1 q=2] q=[p=1 q=6]] q="rbit"]
-      q={[p=0 q=[p=[p=[p=1 q=2] q=[p=1 q=6]] q="rbit"]]}
-    ]
-  ]
-  > (run:regex "(?i)[a-z]+" "Urbit")
-  [ ~
-    [ p=[p=[p=[p=1 q=1] q=[p=1 q=6]] q="Urbit"]
-      q={[p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=6]] q="Urbit"]]}
-    ]
+    { [p=1 q=[p=[p=[p=1 q=3] q=[p=1 q=4]] q="c"]]
+      [p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="abc"]]
+    }
   ]
   ```
+
+
+### `++ran:regex`
+
+Find the first match crashing if there is none.
+
+Accepts:  a regular expression and a match target
+
+Produces:  `match`
+
+Crashes if the regular expression is invalid or of there is no match.
+
+  ```
+  > (ran:regex ".+" "")
+  ...
+  dojo: hoon expression failed
+  > (ran:regex "[a-z]+" "Abc")
+  {[p=0 q=[p=[p=[p=1 q=2] q=[p=1 q=4]] q="bc"]]}
+  > (ran:regex "([a-z])+" "abc")
+  { [p=1 q=[p=[p=[p=1 q=3] q=[p=1 q=4]] q="c"]]
+    [p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="abc"]]
+  }
+  ```
+
+
+### `++rut:regex`
+
+Variant of `+run` that produces `(unit range)` instead of `(unit match)`.
+
+
+### `++rat:regex`
+
+Variant of `+ran` that produces `range` instead of `match`.
 
 
 ### `++all:regex`
@@ -63,34 +104,30 @@ Find all matches of a regular expression.
 
 Accepts:  a regular expression and a match target
 
-Produces:  a list of matches
+Produces:  `(list match)`
 
 Crashes if the regular expression is invalid.
 
   ```
-  > (all:regex "\\w+" "the quick brown fox")
+  > (all:regex "\\w*" "the quick brown fox")
   ~[
-    [ p=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]
-      q={[p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]]}
-    ]
-    [ p=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]
-      q={[p=0 q=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]]}
-    ]
-    [ p=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]
-      q={[p=0 q=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]]}
-    ]
-    [ p=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]
-      q={[p=0 q=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]]}
-    ]
+    {[p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="the"]]}
+    {[p=0 q=[p=[p=[p=1 q=5] q=[p=1 q=10]] q="quick"]]}
+    {[p=0 q=[p=[p=[p=1 q=11] q=[p=1 q=16]] q="brown"]]}
+    {[p=0 q=[p=[p=[p=1 q=17] q=[p=1 q=20]] q="fox"]]}
   ]
   ```
+
+### `++alt:regex`
+
+Variant of `+all` that produces `(list range)` instead of `(list match)`.
 
 
 ### `++sub:regex`
 
 Replace the first match of a regular expression.
 
-Accepts:  a regular expression, a match target, and a replacement string
+Accepts:  a regular expression, a replacement string, and a match target
 
 Produces:  the match target, potentially modified
 
@@ -106,7 +143,7 @@ Crashes if the regular expression is invalid.
 
 Replace the all matches of a regular expression.
 
-Accepts:  a regular expression, a match target, and a replacement string
+Accepts:  a regular expression, a replacement string, and a match target
 
 Produces:  the match target, potentially modified
 
@@ -117,84 +154,43 @@ Crashes if the regular expression is invalid.
   "HOON HOON HOON
   ```
 
-### `++start:regex`
 
-Create an initial sample for successive matching.
+###  `++subf:regex`
 
-Accepts:  a regular expression and a match target
-
-Produces:  a sample suitable for use by `++next` (see below)
-
-  ```
-  > (start:regex "(abc|def?)+" "abcd abcde abcdef")
-  {a sample for the regex door}
-  ```
+Variant of `+sub` that accepts a gate from `tape` to `tape` instead of a replacement string, slamming that gate on the text of the first match.
 
 
-### `++valid:regex`
+###  `++gsubf:regex`
 
-Unitized version of `++start`; produces nil instead of crashing.
-
-Accepts:  a regular expression and a match target
-
-Produces:  a unit containing a sample for use by `++next` (see below)
-
-  ```
-  > (valid:regex "\\w+" "")
-  [ ~
-    {a sample for the regex door}
-  ]
-  > (valid:regex "?" "")
-  ~
-  ```
-
-
-### `++next:regex`
-
-This arm requires a sample for the `regex` door.
-
-Produces a tuple of the next match, and a new match state.
-
-  ```
-  > =r (start:regex "(abc|def?)+" "abcde abcdef")
-  > =s ~(next regex r)
-  > s
-  [ ~
-    [   p
-      [ p=[p=[p=[p=1 q=1] q=[p=1 q=6]] q="abcde"]
-          q
-        { [p=1 q=[p=[p=[p=1 q=1] q=[p=1 q=4]] q="abc"]]
-          [p=0 q=[p=[p=[p=1 q=1] q=[p=1 q=6]] q="abcde"]]
-        }
-      ]
-        q
-      {new sample}
-    ]
-  ]
-  > =t ~(next regex +>.s)
-  > t
-  [ ~
-    [   p
-      [ p=[p=[p=[p=1 q=7] q=[p=1 q=13]] q="abcdef"]
-          q
-        { [p=1 q=[p=[p=[p=1 q=7] q=[p=1 q=10]] q="abc"]]
-          [p=0 q=[p=[p=[p=1 q=7] q=[p=1 q=13]] q="abcdef"]]
-        }
-      ]
-        q
-      {new sample}
-    ]
-  ]
-  > ~(next regex +>.t)
-  ~
-  ```
+Variant of `+gsub` that accepts a gate from `tape` to `tape` instead of a replacement string, slamming that gate on the text of each match.
 
 
 ### Regular expression syntax
 
-Same as POSIX Extended Regular Expressions (`grep -E`), with the following extensions:
 
-- Lookaround:  `(?=...)`, `(?!...)`, `(?<=...)`, `(?<!...)`
-- Hesitant and possessive repetition:  `...*?`, `...*+`, etc
-- Case insensitivity:  `(?i)` to begin, `(?-i)` to end
-- Perl-style classes and anchors:  `\w`/`\W`, `\s`/`\S`, `\d`/`\D`, `\u`/`\U`, `\l`/`\L`, `\b`/`\B`
+Same as POSIX Extended Regular Expressions (`grep -E`), with the following extensions:
+| Extension        | Syntax       | Example                                              |
+|------------------|--------------|------------------------------------------------------|
+| Perl classes     | `\w\d\s\u\l` | `\w+\.` (word followed by period)                    |
+|                  | `\W\D\S\U\L` | `\d+(\W+\d+)*` (series of numbers)                   |
+| Perl anchors     | `\b\B\<\>`   | `\<\w+\>` (any full word)                            |
+| Lookahead        | `(?=...)`    | `(?=\u)\w+` (capitalized word)                       |
+|                  | `(?!...)`    | `(?!\d)\w+` (word not beginning with number)         |
+| Case sensitivity | `(?i)`       | `(?i)(\w+)(\s*\1)+` (repeated word)                  |
+|                  | `(?-i)`      | `(?i)(\w+)(?i)(\s*\1)+` (word repeated in same case) |
+
+
+These character classes are equivalent:
+
+| Perl class | Posix class    |
+|------------|----------------|
+| `\w`       | `[[:word:]]`   |
+| `\W`       | `[[:^word:]]`  |
+| `\d`       | `[[:digit:]]`  |
+| `\D`       | `[[:^digit:]]` |
+| `\s`       | `[[:space:]]`  |
+| `\S`       | `[[:^space:]]` |
+| `\u`       | `[[:upper:]]`  |
+| `\U`       | `[[:^upper:]]` |
+| `\l`       | `[[:lower:]]`  |
+| `\L`       | `[[:^lower:]]` |
