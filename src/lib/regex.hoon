@@ -486,14 +486,14 @@
       (some pan u.ran)
     ;~  plug
       ;~  pose
-        (cook text ;~(plug lit (easy ~)))
-        cap
-        bak
-        cla
-        ank
-        luk
-        (cold any dot)
-        (cook text ;~(pfix bas ;~(plug next (easy ~))))
+        (cook text ;~(plug lit (easy ~)))  :: escape literals
+        cap                                :: capture group
+        bak                                :: backtrack
+        cla                                :: character class
+        ank                                :: control chars
+        luk                                :: lookahead
+        (cold any dot)                     :: match forward
+        (cook text ;~(pfix bas ;~(plug next (easy ~))))  :: 
       ==
     ::
       (punt rep)
