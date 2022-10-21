@@ -3,10 +3,19 @@
 [UF]: https://urbit.org/grants/regex-library
 
 
-## Files
+##  Files
 
 - `lib/regex.hoon`:  A regular expressions library.
 - `tests/lib/regex.hoon`:  A test suite for the library.
+
+
+##  Usage
+
+Import with Ford per usual (`/+  regex`), or try it out in the dojo with `=regex -build-file %/lib/regex/hoon`.  Regex syntax is Posix ERE, with some extensions (see below).
+
+When writing regexes in Hoon, take care to properly escape the characters that need escaping. A regex that matches five characters is written in Hoon as `".\{5}"` to avoid string interpolation; a regex that matches a literal `{` is written as `"\\\{"`.  Some sequences, like the backreference `\2`, can have a deceptive but valid meaning if not escaped:  `"(.(.))\2"` is a syntax error, but `"(.(.))\20"` encodes a space character.  This backrefence should be written as `\\2`.
+
+Regexes involving nested repetition, such as `(\w+\.*)*` (or its tape representation, "(\\w+\\.*)*"`), can be especially slow to execute because of the combinatorial explosion of valid groupings.  For example, `abcd` could be matched as {`abcd`}, {`abc` `d`}, {`ab` `cd`}, {`ab` `c` `d`}, and so forth.  This can be usually be remedied by turning `*` into `+` within the capture group, preventing overlapping match candidates.
 
 
 ##  Types
@@ -177,7 +186,7 @@ Same as POSIX Extended Regular Expressions (`grep -E`), with the following exten
 | Lookahead        | `(?=...)`    | `(?=\u)\w+` (capitalized word)                       |
 |                  | `(?!...)`    | `(?!\d)\w+` (word not beginning with number)         |
 | Case sensitivity | `(?i)`       | `(?i)(\w+)(\s*\1)+` (repeated word)                  |
-|                  | `(?-i)`      | `(?i)(\w+)(?i)(\s*\1)+` (word repeated in same case) |
+|                  | `(?-i)`      | `(?i)(\w+)(?-i)(\s*\1)+` (word repeated in same case) |
 
 
 These character classes are equivalent:
