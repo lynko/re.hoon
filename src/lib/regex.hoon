@@ -6,6 +6,12 @@
 =<
 |%
 ::
+::  This outer core represents the main interface for executing regular
+::  expressions.  Most of its arms produce a +$range (a tape annotated
+::  with location data) or a +$match (a map from capture numbers to
+::  +$range).  These functions should serve your basic purposes, but for
+::  more complex operations you may use the inner core ++on (see below).
+::
 ++  valid   ::  Determine if a regular expression is valid
   |=  [regex=tape]  ^-  ?
   !=(~ (purse:on regex))
@@ -99,11 +105,11 @@
 ::
 ++  sub   ::  Replace the first match with a string
   |=  [regex=tape repl=tape text=tape]  ^-  tape
-  (subf regex |=(* text) text)
+  (subf regex |=(* repl) text)
 ::
-++  gsub  ::  Replace
+++  gsub  ::  Replace all matches with a string
   |=  [regex=tape repl=tape text=tape]  ^-  tape
-  (gsubf regex |=(* text) text)
+  (gsubf regex |=(* repl) text)
 ::
 ++  subf  ::  Replace the first match by a function
   |=  [regex=tape repl=$-(tape tape) text=tape]  ^-  tape
@@ -126,10 +132,31 @@
 ::
 |%  ::  Internal operations
 ::
+::  Patterns are construed as a function that produces a promise-based
+::  stream of successive matches.  This function accepts a +$state which
+::  is somewhat more complex than a tape; the ++on core is used for
+::  creating and operating on these states and patterns.
+::
+::  Applying a pattern to a match state produces a +$promise, which is a
+::  trap producing a +$product.  +$product is either nil or a tuple,
+::  containing the state of the next match that was detected, alongside
+::  another promise that will produce the next +$product.  The first
+::  match state is not necessarily the correct match; use ++long:on to
+::  extract the leftmost-longest match from a promise, according to
+::  Posix rules.
+::
+::  ++parse:of is the main entry point for creating patterns, but it
+::  needs an appropriate sample constructed by ++start:of; this logic
+::  is handled by ++parse:on.
+::
+::  When using patterns directly, remember that they only match text
+::  beginning at the given state.  Use ++init:on and ++skip:on to test
+::  matches downstream in the subject text.
+::
 +$  state
-  $:  tub=nail
-      las=(unit @t)
-      gru=match
+  $:  tub=nail        ::  Remaining text to be matched
+      las=(unit @t)   ::  The previous character in the subject text
+      gru=match       ::  Capture groups that have been matched so far
   ==
 +$  product  (unit (pair state promise))
 +$  promise  _^&(|.(`(unit (pair state _^&(.)))``[*state .]))
@@ -141,7 +168,7 @@
     |=  [regex=tape]  ^-  pattern
     parse:(start:of regex)
   ::
-  ++  purse
+  ++  purse   ::  Unitized parse
     |=  [regex=tape]  ^-  (unit pattern)
     purse:(start:of regex)
   ::
@@ -192,6 +219,31 @@
   --
 ::
 ++  of  ::  Pattern parsing operations
+  ::
+  ::  Parsing is done by constructing an initial sample with ++start
+  ::  and evaluating the ++parse arm.  ++parse begins at the top level
+  ::  with ++top, making reference to the middle level ++mid and the
+  ::  bottom level ++bot, which recurs back to ++top in the case of
+  ::  capture groups.
+  ::
+  ::  The least tightly-binding regex operator is |, but there is also
+  ::  the case-sensitivity operator (?i), which is effective beyond
+  ::  subsequent | operators but not outside an enclosing group of ().
+  ::  Because (?i) can occur in the middle of an alternated pattern,
+  ::  like "a|b(?i)c|d", we parse the top level into a list of lists,
+  ::  then join the ends of these lists together by catenation into a
+  ::  flat list, which is then joined by alternation.
+  ::
+  ::  "a|b(?i)c|d"  ->  {(a or b), ([Cc] or [Dd])}
+  ::                ->  (a or b[Cc] or [Dd]}
+  ::
+  ::  The middle level of parsing handles catenated sequences; for
+  ::  example "a(bcd)*e" is a sequence of three bottom-level regexes:
+  ::  a, (bcd)*, and e.  The bottom level of parsing handles everything
+  ::  else (characters, anchors, capture groups, etc) with optional
+  ::  repetition.  Capture groups recur to the top level, containing
+  ::  the effects of any case-sensitivity operators.
+  ::
   |_  $:  reg=tape  ::  The pattern being parsed
           cas=?     ::  Are we parsing a case-sensitive pattern?
           arp=?     ::  Will a `)` in the pattern match literally?
@@ -277,7 +329,7 @@
     |-  ^-  product
     =+  aft=(mid)
     ?~  aft  `[p.u.for ..^$(per q.u.for)]
-    `[`state`p.u.aft ..$(mid q.u.aft)]
+    `[p.u.aft ..$(mid q.u.aft)]
   ++  text  ::  Create a pattern that matches literal text
     |=  [tet=tape]  ^-  pattern
     ?:  cas
@@ -486,14 +538,14 @@
       (some pan u.ran)
     ;~  plug
       ;~  pose
-        (cook text ;~(plug lit (easy ~)))  :: escape literals
+        (cook text ;~(plug lit (easy ~)))  :: literal or escaped character
         cap                                :: capture group
         bak                                :: backtrack
         cla                                :: character class
         ank                                :: control chars
         luk                                :: lookahead
         (cold any dot)                     :: match forward
-        (cook text ;~(pfix bas ;~(plug next (easy ~))))  :: 
+        (cook text ;~(pfix bas ;~(plug next (easy ~))))  :: non-special escape
       ==
     ::
       (punt rep)
