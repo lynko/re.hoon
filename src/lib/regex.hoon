@@ -132,7 +132,7 @@
       gru=match
   ==
 +$  product  (unit (pair state promise))
-+$  promise    _^&(|.(`(unit (pair state _^&(.)))``[*state .]))
++$  promise  _^&(|.(`(unit (pair state _^&(.)))``[*state .]))
 +$  pattern  _^|(|=(state *promise))
 ::
 ++  on  ::  Basic operations on patterns and states
@@ -486,14 +486,14 @@
       (some pan u.ran)
     ;~  plug
       ;~  pose
-        (cook text ;~(plug lit (easy ~)))
-        cap
-        bak
-        cla
-        ank
-        luk
-        (cold any dot)
-        (cook text ;~(pfix bas ;~(plug next (easy ~))))
+        (cook text ;~(plug lit (easy ~)))  :: escape literals
+        cap                                :: capture group
+        bak                                :: backtrack
+        cla                                :: character class
+        ank                                :: control chars
+        luk                                :: lookahead
+        (cold any dot)                     :: match forward
+        (cook text ;~(pfix bas ;~(plug next (easy ~))))  :: 
       ==
     ::
       (punt rep)
@@ -562,13 +562,13 @@
         %-  sear  :_  next
         %~  get  by
         %-  malt
-        :~  ['a' '\07']
-            ['t' '\09']
-            ['n' '\0a']
-            ['v' '\0b']
-            ['f' '\0c']
-            ['r' '\0d']
-            ['e' '\1b']
+        :~  ['a' '\07']    :: Bell
+            ['t' '\09']    :: Horizontal tab
+            ['n' '\0a']    :: Newline
+            ['v' '\0b']    :: Vertical tab
+            ['f' '\0c']    :: Form feed
+            ['r' '\0d']    :: Carriage return
+            ['e' '\1b']    :: Escape
         ==
       ::
         ;~  pfix  (jest 'x')
