@@ -143,7 +143,7 @@ Produces:  the match target, potentially modified
 Crashes if the regular expression is invalid.
 
   ```
-  > (sub:regex "(?i)hoon" "Hoon hoon hoon" "HOON")
+  > (sub:regex "(?i)hoon" "HOON" "Hoon hoon hoon")
   "HOON hoon hoon"
   ```
 
@@ -159,7 +159,7 @@ Produces:  the match target, potentially modified
 Crashes if the regular expression is invalid.
 
   ```
-  > (gsub:regex "(?i)hoon" "Hoon hoon hoon" "HOON")
+  > (gsub:regex "(?i)hoon" "HOON" "Hoon hoon hoon")
   "HOON HOON HOON
   ```
 
