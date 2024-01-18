@@ -727,4 +727,24 @@
     !>(`(unit range:regex)``[[[1 2] [1 4]] "aa"])
     !>((fort:regex "a*" [1 2] "aaab"))
   ==
+++  test-substitutions
+  ;:  weld
+  :: sub - Replace the first match of a regular expression.
+  %+  expect-eq
+    !>  "HOON hoon hoon"
+    !>  (sub:regex "(?i)hoon" "HOON" "Hoon hoon hoon")
+  ::
+  %+  expect-eq
+    !>  "Hoon HOON hoon"
+    !>  (sub:regex "hoon" "HOON" "Hoon hoon hoon")
+  ::
+  :: gsub - Replace the all matches of a regular expression.
+  %+  expect-eq
+    !>  "HOON HOON HOON"
+    !>  (gsub:regex "(?i)hoon" "HOON" "Hoon hoon hoon")
+  ::
+  %+  expect-eq
+    !>  "Hoon HOON HOON"
+    !>  (gsub:regex "hoon" "HOON" "Hoon hoon hoon")
+  ==
 --
